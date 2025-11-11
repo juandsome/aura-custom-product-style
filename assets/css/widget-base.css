@@ -1,0 +1,339 @@
+/**
+ * Aura Custom Product Style - Base Widget Styles
+ * Shared styles for all layout types
+ *
+ * @package Aura_Custom_Product_Style
+ */
+
+/* ========================================
+   CONTAINER STYLES
+   ======================================== */
+
+.aura-products-wrapper {
+	width: 100%;
+	max-width: 100%;
+	margin: 0 auto;
+	position: relative;
+}
+
+/* Grid Container */
+.aura-products-grid {
+	display: grid;
+	width: 100%;
+	gap: 20px;
+	transition: all 0.3s ease;
+	align-items: stretch;
+}
+
+/* Auto columns mode - space evenly with card width */
+.aura-products-grid[data-columns-mode="auto"] {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	align-items: stretch;
+}
+
+.aura-products-grid[data-columns-mode="auto"] .aura-product-card {
+	flex: 0 0 var(--aura-card-width, 350px);
+	max-width: var(--aura-card-width, 350px);
+}
+
+/* Fixed columns mode */
+.aura-products-grid[data-columns-mode="fixed"][data-columns-count="1"] {
+	grid-template-columns: 1fr;
+}
+
+.aura-products-grid[data-columns-mode="fixed"][data-columns-count="2"] {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.aura-products-grid[data-columns-mode="fixed"][data-columns-count="3"] {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.aura-products-grid[data-columns-mode="fixed"][data-columns-count="4"] {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+/* ========================================
+   PRODUCT CARD BASE STYLES
+   ======================================== */
+
+.aura-product-card {
+	display: flex;
+	position: relative;
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Hidden items (for show more functionality) */
+.aura-product-card.hidden-item {
+	display: none;
+	opacity: 0;
+	visibility: hidden;
+}
+
+/* Show hidden items when grid is expanded */
+.aura-products-grid.expanded .aura-product-card.hidden-item {
+	display: flex;
+	animation: fadeIn 0.5s ease forwards;
+}
+
+/* Loading state */
+.aura-product-card.loading {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.aura-product-card.loading::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(255, 255, 255, 0.5);
+	z-index: 10;
+}
+
+/* ========================================
+   BUTTON STYLES
+   ======================================== */
+
+.aura-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	transition: opacity 0.2s ease, transform 0.1s ease;
+	outline: none;
+}
+
+.aura-btn:hover {
+	opacity: 0.7;
+}
+
+.aura-btn:active {
+	transform: scale(0.95);
+}
+
+/* Focus styles for accessibility */
+.aura-btn:focus-visible {
+	outline: 2px solid #333;
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+.aura-btn img {
+	display: block;
+	width: 24px;
+	height: 24px;
+	pointer-events: none;
+}
+
+/* Disabled state */
+.aura-btn:disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
+}
+
+/* ========================================
+   SHOW MORE / LESS BUTTON
+   ======================================== */
+
+.aura-show-more-wrapper {
+	width: 100%;
+	margin-top: 30px;
+	padding-top: 20px;
+	border-top: 1px solid #B0A695;
+	text-align: center;
+}
+
+.aura-show-more-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 10px 20px;
+	background: transparent;
+	border: none;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1.2em;
+	font-weight: 400;
+	color: #333;
+	cursor: pointer;
+	transition: opacity 0.2s ease;
+	text-decoration: none;
+	outline: none;
+}
+
+.aura-show-more-btn:hover {
+	opacity: 0.7;
+}
+
+.aura-show-more-btn:focus-visible {
+	outline: 2px solid #333;
+	outline-offset: 4px;
+	border-radius: 4px;
+}
+
+.aura-show-more-btn .aura-chevron {
+	display: inline-block;
+	transition: transform 0.3s ease;
+	font-size: 0.8em;
+}
+
+/* Rotated chevron when expanded */
+.aura-products-grid.expanded ~ .aura-show-more-wrapper .aura-chevron {
+	transform: rotate(180deg);
+}
+
+/* ========================================
+   QUANTITY DISPLAY
+   ======================================== */
+
+.aura-quantity-display {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 30px;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+	font-weight: 600;
+	color: #333;
+	text-align: center;
+}
+
+/* ========================================
+   NOTICE MESSAGES
+   ======================================== */
+
+.aura-products-notice {
+	padding: 20px;
+	text-align: center;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 1em;
+	color: #666;
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes pulse {
+	0%, 100% {
+		opacity: 0.6;
+	}
+	50% {
+		opacity: 0.3;
+	}
+}
+
+/* Loading animation */
+.aura-product-card.loading {
+	animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet */
+@media screen and (max-width: 768px) {
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count="4"],
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count="3"] {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.aura-show-more-btn {
+		font-size: 1em;
+		padding: 8px 16px;
+	}
+}
+
+/* Mobile */
+@media screen and (max-width: 480px) {
+	.aura-products-grid[data-columns-mode="fixed"] {
+		grid-template-columns: 1fr;
+	}
+
+	.aura-products-grid[data-columns-mode="auto"] {
+		grid-template-columns: 1fr;
+	}
+
+	.aura-products-grid {
+		gap: 15px;
+	}
+
+	.aura-show-more-wrapper {
+		margin-top: 20px;
+		padding-top: 15px;
+	}
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+	.aura-product-card,
+	.aura-products-grid,
+	.aura-btn,
+	.aura-chevron,
+	.aura-show-more-btn {
+		transition: none;
+		animation: none;
+	}
+
+	.aura-products-grid.expanded .aura-product-card.hidden-item {
+		animation: none;
+	}
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+	.aura-btn:focus-visible,
+	.aura-show-more-btn:focus-visible {
+		outline-width: 3px;
+		outline-color: currentColor;
+	}
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+	.aura-product-card.hidden-item {
+		display: flex !important;
+		opacity: 1 !important;
+		visibility: visible !important;
+	}
+
+	.aura-show-more-wrapper {
+		display: none;
+	}
+
+	.aura-btn {
+		display: none;
+	}
+}
