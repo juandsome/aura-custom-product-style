@@ -178,30 +178,11 @@
    RESPONSIVE DESIGN
    ======================================== */
 
-/* Tablet - Adjust layout for smaller screens */
+/* Tablet - Keep horizontal layout */
 @media screen and (max-width: 768px) {
-	.aura-product-card {
-		flex-direction: column;
-	}
-
-	.aura-product-image {
-		flex: 0 0 200px;
-		max-width: 100%;
-		min-height: 200px;
-	}
-
 	.aura-product-info {
 		padding: 15px;
 		gap: 10px;
-	}
-
-	.aura-product-header {
-		flex-direction: column;
-		align-items: flex-start;
-	}
-
-	.aura-product-controls {
-		align-self: flex-end;
 	}
 
 	.aura-product-title {
@@ -213,47 +194,59 @@
 	}
 }
 
-/* Mobile - Stack everything vertically */
+/* Mobile - Keep horizontal layout (30% image, 70% info) */
 @media screen and (max-width: 480px) {
+	/* Maintain horizontal layout */
+	.aura-product-card {
+		flex-direction: row;
+	}
+
+	/* Keep image at 30% */
 	.aura-product-image {
-		flex: 0 0 180px;
-		min-height: 180px;
+		flex: 0 0 30%;
+		max-width: 30%;
+		min-height: 150px;
 	}
 
 	.aura-product-info {
-		padding: 12px;
+		padding: 10px;
 		gap: 8px;
 	}
 
 	.aura-product-title {
-		font-size: 1.2em !important;
-	}
-
-	.aura-product-description {
-		font-size: 0.9em !important;
-	}
-
-	.aura-product-price-row {
-		font-size: 0.9em !important;
-		padding-bottom: 10px;
-	}
-
-	.aura-product-total-row {
 		font-size: 1em !important;
 	}
 
+	.aura-product-description {
+		font-size: 0.85em !important;
+	}
+
+	.aura-product-price-row {
+		font-size: 0.85em !important;
+		padding-bottom: 8px;
+	}
+
+	.aura-product-total-row {
+		font-size: 0.95em !important;
+	}
+
 	.aura-product-controls {
-		gap: 8px;
+		gap: 6px;
 	}
 
 	.aura-product-controls .aura-btn {
-		width: 20px;
-		height: 20px;
+		width: 18px;
+		height: 18px;
 	}
 
 	.aura-product-controls .aura-btn img {
-		width: 20px;
-		height: 20px;
+		width: 18px;
+		height: 18px;
+	}
+
+	.aura-quantity-display {
+		min-width: 20px;
+		font-size: 0.9em;
 	}
 }
 

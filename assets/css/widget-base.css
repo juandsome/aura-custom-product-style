@@ -286,7 +286,14 @@
 	}
 
 	.aura-products-grid[data-columns-mode="auto"] {
-		grid-template-columns: 1fr;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.aura-products-grid[data-columns-mode="auto"] .aura-product-card {
+		flex: 1 1 100%;
+		max-width: 100%;
+		width: 100%;
 	}
 
 	.aura-products-grid {
