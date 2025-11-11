@@ -25,7 +25,7 @@
 	align-items: stretch;
 }
 
-/* Auto columns mode - cards aligned to edges with gap between */
+/* Auto columns mode - cards distributed evenly in available space */
 .aura-products-grid[data-columns-mode="auto"] {
 	display: flex;
 	flex-wrap: wrap;
@@ -34,8 +34,8 @@
 }
 
 .aura-products-grid[data-columns-mode="auto"] .aura-product-card {
-	flex: 0 0 var(--aura-card-width, 350px);
-	max-width: var(--aura-card-width, 350px);
+	flex: 1 1 0;
+	min-width: 0;
 }
 
 /* Fixed columns mode */

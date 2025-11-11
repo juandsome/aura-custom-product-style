@@ -33,9 +33,6 @@
 				this.eventsInitialized = true;
 			}
 
-			// Calculate columns for auto mode
-			this.calculateAllColumns();
-
 			// Update visible rows for all widgets
 			this.updateAllVisibleRows();
 
@@ -132,17 +129,32 @@
 				const $grid = $(this);
 				const columnsMode = $grid.attr('data-columns-mode');
 				const rowsVisible = parseInt($grid.attr('data-rows-visible')) || 2;
+				const $cards = $grid.find('.aura-product-card');
+				const totalCards = $cards.length;
 
 				let columns;
 				if (columnsMode === 'auto') {
-					columns = parseInt($grid.attr('data-calculated-columns')) || 2;
+					// Calculate columns based on actual card positions
+					if ($cards.length > 1) {
+						const firstCardTop = $cards.eq(0).offset().top;
+						let cardsInFirstRow = 1;
+
+						for (let i = 1; i < $cards.length; i++) {
+							if (Math.abs($cards.eq(i).offset().top - firstCardTop) < 5) {
+								cardsInFirstRow++;
+							} else {
+								break;
+							}
+						}
+						columns = cardsInFirstRow;
+					} else {
+						columns = 1;
+					}
 				} else {
 					columns = parseInt($grid.attr('data-columns-count')) || 2;
 				}
 
 				const visibleItems = rowsVisible * columns;
-				const $cards = $grid.find('.aura-product-card');
-				const totalCards = $cards.length;
 
 				// Show/hide cards based on visible items
 				$cards.each(function(index) {
@@ -459,9 +471,6 @@
 		 * Handle window resize
 		 */
 		handleResize: function() {
-			// Recalculate columns for auto mode
-			this.calculateAllColumns();
-
 			// Update visible rows
 			this.updateAllVisibleRows();
 
