@@ -69,15 +69,25 @@
 
 /* Hidden items (for show more functionality) */
 .aura-product-card.hidden-item {
-	display: none;
+	display: none !important;
 	opacity: 0;
-	visibility: hidden;
 }
 
 /* Show hidden items when grid is expanded */
 .aura-products-grid.expanded .aura-product-card.hidden-item {
-	display: flex;
-	animation: fadeIn 0.5s ease forwards;
+	display: flex !important;
+	animation: fadeInItems 0.5s ease forwards;
+}
+
+@keyframes fadeInItems {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 /* Loading state */

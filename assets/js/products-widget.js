@@ -291,20 +291,19 @@
 		 * Handle show more/less button click
 		 */
 		handleShowMore: function($button) {
+			const self = this;
 			const $wrapper = $button.closest('.aura-products-wrapper');
 			const $grid = $wrapper.find('.aura-products-grid');
 			const $btnText = $button.find('.aura-btn-text');
 			const showMoreText = $button.attr('data-show-more-text') || 'Show More';
 			const showLessText = $button.attr('data-show-less-text') || 'Show Less';
+			const $hiddenItems = $grid.find('.aura-product-card.hidden-item');
 
 			// Toggle expanded state
 			if ($grid.hasClass('expanded')) {
 				// Collapse
 				$grid.removeClass('expanded');
 				$btnText.text(showMoreText);
-
-				// Hide items with animation
-				$grid.find('.aura-product-card.hidden-item').fadeOut(500);
 
 				// Scroll to top of widget
 				$('html, body').animate({
@@ -315,8 +314,11 @@
 				$grid.addClass('expanded');
 				$btnText.text(showLessText);
 
-				// Show items with animation
-				$grid.find('.aura-product-card.hidden-item').fadeIn(500);
+				// CSS handles display, but we need to trigger layout recalc
+				// Use setTimeout to ensure CSS has applied before recalculating
+				setTimeout(function() {
+					self.equalizeCardHeights();
+				}, 50);
 			}
 		},
 

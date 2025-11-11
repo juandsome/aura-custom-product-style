@@ -55,10 +55,10 @@ $cart_quantities = aura_cps_get_all_cart_quantities();
 			 data-product-price="<?php echo esc_attr( $product_price ); ?>">
 
 			<!-- Left Column: Image (30%) -->
-			<div class="aura-product-image">
-				<img src="<?php echo esc_url( $product_image_url ); ?>"
-					 alt="<?php echo esc_attr( $product_name ); ?>"
-					 loading="lazy" />
+			<div class="aura-product-image"
+				 style="background-image: url('<?php echo esc_url( $product_image_url ); ?>');"
+				 role="img"
+				 aria-label="<?php echo esc_attr( $product_name ); ?>">
 			</div>
 
 			<!-- Right Column: Product Info (70%) -->

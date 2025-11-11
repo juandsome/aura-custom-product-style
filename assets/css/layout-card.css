@@ -34,20 +34,11 @@
 	max-width: 30%;
 	position: relative;
 	overflow: hidden;
-	background: #f5f5f5;
+	background-color: #f5f5f5;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
 	min-height: 200px;
-}
-
-.aura-product-image img {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	object-position: center center;
-	display: block;
 }
 
 /* ========================================
@@ -349,11 +340,6 @@
 .aura-product-total-row {
 	text-transform: none !important;
 	letter-spacing: normal !important;
-}
-
-/* Ensure images maintain aspect ratio */
-.aura-product-image img {
-	/* No hover effects on image */
 }
 
 /* ========================================
