@@ -25,11 +25,11 @@
 	align-items: stretch;
 }
 
-/* Auto columns mode - space evenly with card width */
+/* Auto columns mode - cards aligned to edges with gap between */
 .aura-products-grid[data-columns-mode="auto"] {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-evenly;
+	justify-content: space-between;
 	align-items: stretch;
 }
 

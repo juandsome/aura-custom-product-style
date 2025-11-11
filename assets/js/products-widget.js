@@ -66,6 +66,21 @@
 				self.handleMinusClick($(this));
 			});
 
+			// Checkbox button click (for checkbox layout)
+			$(document).off('click.auraCps', '.aura-checkbox-btn')
+					   .on('click.auraCps', '.aura-checkbox-btn', function(e) {
+				e.preventDefault();
+				self.handleCheckboxClick($(this));
+			});
+
+			// Checkbox label click (for checkbox layout)
+			$(document).off('click.auraCps', '.aura-checkbox-label')
+					   .on('click.auraCps', '.aura-checkbox-label', function(e) {
+				e.preventDefault();
+				const $button = $(this).siblings('.aura-checkbox-btn');
+				self.handleCheckboxClick($button);
+			});
+
 			// Show more/less button click
 			$(document).off('click.auraCps', '.aura-show-more-btn')
 					   .on('click.auraCps', '.aura-show-more-btn', function(e) {
@@ -218,6 +233,68 @@
 		},
 
 		/**
+		 * Handle checkbox button click (checkbox layout)
+		 */
+		handleCheckboxClick: function($button) {
+			const productId = $button.data('product-id');
+			const $card = $button.closest('.aura-checkbox-card');
+			const isChecked = $button.attr('aria-checked') === 'true';
+			const newQuantity = isChecked ? 0 : 1;
+
+			// Toggle checked state (optimistic UI update)
+			$button.attr('aria-checked', !isChecked);
+
+			// Update cart via AJAX
+			this.updateCheckboxCart(productId, newQuantity, $card, $button);
+		},
+
+		/**
+		 * Update cart for checkbox layout
+		 */
+		updateCheckboxCart: function(productId, quantity, $card, $button) {
+			const self = this;
+
+			// Add loading state
+			$card.addClass('loading');
+
+			$.ajax({
+				url: auraCpsData.ajaxUrl,
+				type: 'POST',
+				data: {
+					action: 'aura_cps_update_product_quantity',
+					nonce: auraCpsData.nonce,
+					product_id: productId,
+					quantity: quantity
+				},
+				success: function(response) {
+					$card.removeClass('loading');
+
+					if (response.success) {
+						// Trigger WooCommerce cart update
+						$(document.body).trigger('wc_fragment_refresh');
+
+						// Update stored cart quantities
+						if (typeof auraCpsData.cartQuantities !== 'undefined') {
+							auraCpsData.cartQuantities[productId] = quantity;
+						}
+					} else {
+						// Revert checkbox state on error
+						const isChecked = $button.attr('aria-checked') === 'true';
+						$button.attr('aria-checked', !isChecked);
+						alert(response.data.message || 'Error updating cart');
+					}
+				},
+				error: function() {
+					$card.removeClass('loading');
+					// Revert checkbox state on error
+					const isChecked = $button.attr('aria-checked') === 'true';
+					$button.attr('aria-checked', !isChecked);
+					alert('An error occurred while updating the cart');
+				}
+			});
+		},
+
+		/**
 		 * Update product UI (quantity and total)
 		 */
 		updateProductUI: function($card, productId, quantity) {
@@ -334,7 +411,15 @@
 					const $card = $(this);
 					const productId = $card.attr('data-product-id');
 					const quantity = auraCpsData.cartQuantities[productId] || 0;
+
+					// Update card layout quantity
 					self.updateProductUI($card, productId, quantity);
+
+					// Update checkbox layout state
+					const $checkbox = $card.find('.aura-checkbox-btn[data-product-id="' + productId + '"]');
+					if ($checkbox.length) {
+						$checkbox.attr('aria-checked', quantity > 0 ? 'true' : 'false');
+					}
 				});
 				return;
 			}
@@ -355,7 +440,15 @@
 							const $card = $(this);
 							const productId = $card.attr('data-product-id');
 							const quantity = response.data.quantities[productId] || 0;
+
+							// Update card layout quantity
 							self.updateProductUI($card, productId, quantity);
+
+							// Update checkbox layout state
+							const $checkbox = $card.find('.aura-checkbox-btn[data-product-id="' + productId + '"]');
+							if ($checkbox.length) {
+								$checkbox.attr('aria-checked', quantity > 0 ? 'true' : 'false');
+							}
 						});
 					}
 				}

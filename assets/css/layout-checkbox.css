@@ -1,0 +1,441 @@
+/**
+ * Aura Custom Product Style - Checkbox Layout Styles
+ * 2-column layout: Image 30% left, Content 70% right
+ * Content structure: Title top, Icon+Description centered, Checkbox+Price bottom
+ *
+ * @package Aura_Custom_Product_Style
+ */
+
+/* ========================================
+   CHECKBOX CARD STRUCTURE
+   ======================================== */
+
+.aura-checkbox-card {
+	display: flex;
+	flex-direction: row;
+	border: 1px solid #9A9A9A;
+	border-radius: 3px;
+	overflow: hidden;
+	background: transparent;
+	transition: box-shadow 0.3s ease;
+	height: 100%;
+	min-height: 100%;
+}
+
+.aura-checkbox-card:hover {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   IMAGE COLUMN (30%)
+   ======================================== */
+
+.aura-checkbox-card .aura-product-image {
+	flex: 0 0 30%;
+	max-width: 30%;
+	position: relative;
+	overflow: hidden;
+	background-color: #f5f5f5;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	min-height: 200px;
+}
+
+/* ========================================
+   CONTENT COLUMN (70%)
+   ======================================== */
+
+.aura-product-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	gap: 0;
+}
+
+/* ========================================
+   HEADER ROW (Title + Icon)
+   ======================================== */
+
+.aura-product-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 15px;
+	padding-bottom: 24px;
+}
+
+.aura-checkbox-card .aura-product-title {
+	flex: 1;
+	margin: 0 !important;
+	padding: 0 !important;
+	font-family: 'Alice', serif !important;
+	font-weight: 400 !important;
+	font-style: normal !important;
+	font-size: 1.5em !important;
+	line-height: 135% !important;
+	color: #333 !important;
+}
+
+.aura-product-icon {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 2em;
+	color: #333;
+	line-height: 1;
+}
+
+.aura-product-icon i {
+	font-size: inherit;
+	line-height: inherit;
+}
+
+.aura-product-icon img {
+	max-width: 48px;
+	max-height: 48px;
+	width: auto;
+	height: auto;
+	display: block;
+}
+
+/* ========================================
+   MIDDLE SECTION (Description - Vertically centered)
+   ======================================== */
+
+.aura-product-middle {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 0;
+	padding: 0;
+}
+
+.aura-checkbox-card .aura-product-description {
+	font-family: 'Open Sans', sans-serif !important;
+	font-weight: 400 !important;
+	font-style: normal !important;
+	font-size: 1em !important;
+	line-height: 150% !important;
+	color: #666 !important;
+	margin: 0 !important;
+}
+
+.aura-checkbox-card .aura-product-description p {
+	margin: 0 0 8px 0;
+	font-family: inherit !important;
+	font-size: inherit !important;
+	line-height: inherit !important;
+}
+
+.aura-checkbox-card .aura-product-description p:last-child {
+	margin-bottom: 0;
+}
+
+/* ========================================
+   FOOTER (Checkbox + Price - Bottom-aligned)
+   ======================================== */
+
+.aura-product-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 24px;
+	gap: 15px;
+	border-top: 1px solid #9A9A9A;
+}
+
+/* Checkbox Wrapper (Checkbox + Label) */
+.aura-checkbox-wrapper {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* Checkbox Button */
+.aura-checkbox-btn {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	margin: 0;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	transition: opacity 0.2s ease, transform 0.1s ease;
+	outline: none;
+}
+
+.aura-checkbox-btn:hover {
+	opacity: 0.7;
+}
+
+.aura-checkbox-btn:active {
+	transform: scale(0.95);
+}
+
+.aura-checkbox-btn:focus-visible {
+	outline: 2px solid #333;
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+.aura-checkbox-icon {
+	display: block;
+	width: 100%;
+	height: 100%;
+	color: #333;
+}
+
+.aura-checkbox-icon rect {
+	transition: all 0.2s ease;
+}
+
+.aura-checkbox-icon .aura-checkmark {
+	transition: opacity 0.2s ease;
+}
+
+/* Checked state */
+.aura-checkbox-btn[aria-checked="true"] .aura-checkmark {
+	opacity: 1 !important;
+}
+
+/* Checkbox Label */
+.aura-checkbox-label {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	font-size: 1em;
+	line-height: 150%;
+	color: #333;
+	cursor: pointer;
+	user-select: none;
+}
+
+/* Price */
+.aura-checkbox-card .aura-product-price {
+	flex: 0 0 auto;
+	font-family: 'Open Sans', sans-serif !important;
+	font-weight: 600 !important;
+	font-style: normal !important;
+	font-size: 1.2em !important;
+	line-height: 150% !important;
+	color: #333 !important;
+	text-align: right;
+}
+
+.aura-checkbox-card .aura-product-price strong {
+	font-family: inherit !important;
+	font-size: inherit !important;
+	font-weight: inherit !important;
+	line-height: inherit !important;
+}
+
+/* ========================================
+   LOADING STATE
+   ======================================== */
+
+.aura-checkbox-card.loading .aura-product-content {
+	opacity: 0.6;
+}
+
+.aura-checkbox-card.loading .aura-checkbox-btn {
+	pointer-events: none;
+	opacity: 0.3;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet - Keep horizontal layout */
+@media screen and (max-width: 768px) {
+	.aura-product-content {
+		padding: 15px;
+	}
+
+	.aura-product-header {
+		padding-bottom: 20px;
+	}
+
+	.aura-checkbox-card .aura-product-title {
+		font-size: 1.3em !important;
+	}
+
+	.aura-product-icon {
+		font-size: 1.8em;
+	}
+
+	.aura-product-icon img {
+		max-width: 40px;
+		max-height: 40px;
+	}
+
+	.aura-checkbox-card .aura-product-price {
+		font-size: 1.1em !important;
+	}
+}
+
+/* Mobile - Keep horizontal layout (30% image, 70% content) */
+@media screen and (max-width: 480px) {
+	/* Maintain horizontal layout */
+	.aura-checkbox-card {
+		flex-direction: row;
+	}
+
+	/* Keep image at 30% */
+	.aura-checkbox-card .aura-product-image {
+		flex: 0 0 30%;
+		max-width: 30%;
+		min-height: 150px;
+	}
+
+	.aura-product-content {
+		padding: 10px;
+	}
+
+	.aura-product-header {
+		padding-bottom: 15px;
+		gap: 10px;
+	}
+
+	.aura-checkbox-card .aura-product-title {
+		font-size: 1em !important;
+	}
+
+	.aura-product-icon {
+		font-size: 1.5em;
+	}
+
+	.aura-product-icon img {
+		max-width: 32px;
+		max-height: 32px;
+	}
+
+	.aura-checkbox-card .aura-product-description {
+		font-size: 0.85em !important;
+	}
+
+	.aura-product-footer {
+		padding-top: 15px;
+		gap: 10px;
+	}
+
+	.aura-checkbox-btn {
+		width: 24px;
+		height: 24px;
+	}
+
+	.aura-checkbox-card .aura-product-price {
+		font-size: 0.95em !important;
+	}
+}
+
+/* ========================================
+   ELEMENTOR PREVIEW FIXES
+   ======================================== */
+
+/* Ensure proper display in Elementor editor */
+.elementor-editor-active .aura-checkbox-card {
+	pointer-events: auto;
+}
+
+.elementor-editor-active .aura-checkbox-card.hidden-item {
+	display: flex;
+	opacity: 0.3;
+}
+
+/* ========================================
+   RTL SUPPORT
+   ======================================== */
+
+.rtl .aura-checkbox-card {
+	flex-direction: row-reverse;
+}
+
+.rtl .aura-product-middle {
+	align-items: flex-end;
+}
+
+.rtl .aura-product-footer {
+	flex-direction: row-reverse;
+}
+
+.rtl .aura-checkbox-card .aura-product-price {
+	text-align: left;
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+	.aura-checkbox-card {
+		border: 1px solid #000;
+		page-break-inside: avoid;
+		box-shadow: none;
+	}
+
+	.aura-checkbox-btn {
+		display: none;
+	}
+}
+
+/* ========================================
+   CUSTOM ELEMENTOR OVERRIDES
+   ======================================== */
+
+/* Ensure typography settings from Elementor are respected while maintaining defaults */
+.aura-checkbox-card * {
+	box-sizing: border-box;
+}
+
+/* Reset Elementor defaults that might interfere */
+.aura-checkbox-card .aura-product-title,
+.aura-checkbox-card .aura-product-description,
+.aura-checkbox-card .aura-product-price {
+	text-transform: none !important;
+	letter-spacing: normal !important;
+}
+
+/* ========================================
+   DARK MODE SUPPORT (if theme supports it)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+	.aura-checkbox-card {
+		background: transparent;
+		border-color: #444;
+	}
+
+	.aura-checkbox-card .aura-product-title {
+		color: #fff !important;
+	}
+
+	.aura-checkbox-card .aura-product-description {
+		color: #ccc !important;
+	}
+
+	.aura-checkbox-card .aura-product-price {
+		color: #fff !important;
+	}
+
+	.aura-checkbox-card .aura-product-image {
+		background-color: #2a2a2a;
+	}
+
+	.aura-product-icon {
+		color: #fff;
+	}
+
+	.aura-checkbox-icon {
+		color: #fff;
+	}
+}

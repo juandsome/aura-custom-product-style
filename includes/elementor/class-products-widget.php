@@ -80,7 +80,12 @@ class Products_Widget extends Widget_Base {
 	 * @return array Style dependencies
 	 */
 	public function get_style_depends() {
-		return array( 'aura-cps-widget-base', 'aura-cps-layout-card' );
+		// Load both layouts - let browser cache handle optimization
+		return array(
+			'aura-cps-widget-base',
+			'aura-cps-layout-card',
+			'aura-cps-layout-checkbox'
+		);
 	}
 
 	/**
@@ -105,10 +110,10 @@ class Products_Widget extends Widget_Base {
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'card',
 				'options' => array(
-					'card' => esc_html__( 'Card Layout', 'aura-custom-product-style' ),
+					'card'     => esc_html__( 'Card Layout', 'aura-custom-product-style' ),
+					'checkbox' => esc_html__( 'Checkbox Layout', 'aura-custom-product-style' ),
 					// Future layouts will be added here
 					// 'list' => esc_html__( 'List Layout', 'aura-custom-product-style' ),
-					// 'grid' => esc_html__( 'Grid Layout', 'aura-custom-product-style' ),
 				),
 			)
 		);
@@ -116,7 +121,103 @@ class Products_Widget extends Widget_Base {
 		$this->end_controls_section();
 
 		// ========================================
-		// SECTION 2: Product Filters
+		// SECTION 2: Icon Settings (Checkbox Layout Only)
+		// ========================================
+		$this->start_controls_section(
+			'section_icon',
+			array(
+				'label'     => esc_html__( 'Product Icon', 'aura-custom-product-style' ),
+				'tab'       => Controls_Manager::TAB_CONTENT,
+				'condition' => array(
+					'layout_type' => 'checkbox',
+				),
+			)
+		);
+
+		$this->add_control(
+			'icon_type',
+			array(
+				'label'   => esc_html__( 'Icon Type', 'aura-custom-product-style' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'icon',
+				'options' => array(
+					'icon'  => esc_html__( 'Icon Library', 'aura-custom-product-style' ),
+					'image' => esc_html__( 'Custom Image', 'aura-custom-product-style' ),
+				),
+			)
+		);
+
+		$this->add_control(
+			'product_icon',
+			array(
+				'label'     => esc_html__( 'Choose Icon', 'aura-custom-product-style' ),
+				'type'      => Controls_Manager::ICONS,
+				'default'   => array(
+					'value'   => 'fas fa-check-circle',
+					'library' => 'fa-solid',
+				),
+				'condition' => array(
+					'icon_type' => 'icon',
+				),
+			)
+		);
+
+		$this->add_control(
+			'icon_image',
+			array(
+				'label'     => esc_html__( 'Choose Image', 'aura-custom-product-style' ),
+				'type'      => Controls_Manager::MEDIA,
+				'default'   => array(
+					'url' => '',
+				),
+				'condition' => array(
+					'icon_type' => 'image',
+				),
+			)
+		);
+
+		$this->add_control(
+			'icon_size',
+			array(
+				'label'      => esc_html__( 'Icon Size', 'aura-custom-product-style' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array(
+					'px' => array(
+						'min' => 16,
+						'max' => 100,
+					),
+				),
+				'default'    => array(
+					'unit' => 'px',
+					'size' => 48,
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .aura-product-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .aura-product-icon img' => 'max-width: {{SIZE}}{{UNIT}}; max-height: {{SIZE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'icon_color',
+			array(
+				'label'     => esc_html__( 'Icon Color', 'aura-custom-product-style' ),
+				'type'      => Controls_Manager::COLOR,
+				'default'   => '#333',
+				'selectors' => array(
+					'{{WRAPPER}} .aura-product-icon' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					'icon_type' => 'icon',
+				),
+			)
+		);
+
+		$this->end_controls_section();
+
+		// ========================================
+		// SECTION 3: Product Filters
 		// ========================================
 		$this->start_controls_section(
 			'section_filters',
