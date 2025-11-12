@@ -45,7 +45,7 @@ $cart_quantities = aura_cps_get_all_cart_quantities();
 			$product_name = $product->get_name();
 			$product_price = $product->get_price();
 			$product_description = $product->get_short_description();
-			$product_image_url = aura_cps_get_product_image_url( $product, 'medium' );
+			$product_image_url = aura_cps_get_product_image_url( $product, 'large' );
 			$initial_quantity = isset( $cart_quantities[ $product_id ] ) ? $cart_quantities[ $product_id ] : 0;
 			$is_hidden = ( $index >= $visible_items ) ? 'hidden-item' : '';
 		?>

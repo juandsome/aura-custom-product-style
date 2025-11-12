@@ -17,7 +17,7 @@ $product_name     = isset( $product ) ? $product->get_name() : '';
 $product_price    = isset( $product ) ? (float) $product->get_price() : 0;
 $product_desc     = isset( $product ) ? $product->get_short_description() : '';
 $product_image_id = isset( $product ) ? $product->get_image_id() : 0;
-$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'medium' ) : wc_placeholder_img_src();
+$product_image_url = $product_image_id ? wp_get_attachment_image_url( $product_image_id, 'large' ) : wc_placeholder_img_src();
 
 $currency = get_woocommerce_currency_symbol();
 

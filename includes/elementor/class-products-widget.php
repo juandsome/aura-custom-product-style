@@ -80,11 +80,12 @@ class Products_Widget extends Widget_Base {
 	 * @return array Style dependencies
 	 */
 	public function get_style_depends() {
-		// Load both layouts - let browser cache handle optimization
+		// Load all layouts - let browser cache handle optimization
 		return array(
 			'aura-cps-widget-base',
 			'aura-cps-layout-card',
-			'aura-cps-layout-checkbox'
+			'aura-cps-layout-checkbox',
+			'aura-cps-layout-wine'
 		);
 	}
 
@@ -112,8 +113,7 @@ class Products_Widget extends Widget_Base {
 				'options' => array(
 					'card'     => esc_html__( 'Card Layout', 'aura-custom-product-style' ),
 					'checkbox' => esc_html__( 'Checkbox Layout', 'aura-custom-product-style' ),
-					// Future layouts will be added here
-					// 'list' => esc_html__( 'List Layout', 'aura-custom-product-style' ),
+					'wine'     => esc_html__( 'Wine Layout', 'aura-custom-product-style' ),
 				),
 			)
 		);
