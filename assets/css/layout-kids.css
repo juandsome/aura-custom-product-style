@@ -47,9 +47,9 @@
 }
 
 .aura-kids-icon {
-	flex: 0 0 48px;
-	width: 48px;
-	height: 48px;
+	flex: 0 0 24px;
+	width: 24px;
+	height: 24px;
 	border-radius: 50%;
 	background-size: cover;
 	background-position: center center;
@@ -248,9 +248,9 @@
 	}
 
 	.aura-kids-icon {
-		flex: 0 0 40px;
-		width: 40px;
-		height: 40px;
+		flex: 0 0 20px;
+		width: 20px;
+		height: 20px;
 	}
 
 	.aura-kids-card .aura-product-title {
@@ -290,9 +290,9 @@
 	}
 
 	.aura-kids-icon {
-		flex: 0 0 36px;
-		width: 36px;
-		height: 36px;
+		flex: 0 0 18px;
+		width: 18px;
+		height: 18px;
 	}
 
 	.aura-kids-card .aura-product-title {
