@@ -3,7 +3,7 @@
  * Plugin Name: Aura Custom Product Style
  * Plugin URI: https://collectionaura.com
  * Description: Elementor widgets to display WooCommerce products related to villas in cart with multiple layout options
- * Version: 1.2.2
+ * Version: 1.3.0
  * Author: Collection Aura
  * Author URI: https://collectionaura.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'AURA_CPS_VERSION', '1.2.2' );
+define( 'AURA_CPS_VERSION', '1.3.0' );
 define( 'AURA_CPS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AURA_CPS_URL', plugin_dir_url( __FILE__ ) );
 define( 'AURA_CPS_BASENAME', plugin_basename( __FILE__ ) );
@@ -139,6 +139,14 @@ class Aura_Custom_Product_Style {
 		wp_enqueue_style(
 			'aura-cps-layout-kids',
 			AURA_CPS_URL . 'assets/css/layout-kids.css',
+			array( 'aura-cps-widget-base' ),
+			AURA_CPS_VERSION
+		);
+
+		// Enqueue moments layout CSS
+		wp_enqueue_style(
+			'aura-cps-layout-moments',
+			AURA_CPS_URL . 'assets/css/layout-moments.css',
 			array( 'aura-cps-widget-base' ),
 			AURA_CPS_VERSION
 		);

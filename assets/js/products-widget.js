@@ -78,6 +78,21 @@
 				self.handleCheckboxClick($button);
 			});
 
+			// Moments checkbox button click
+			$(document).off('click.auraCps', '.aura-moments-checkbox-btn')
+					   .on('click.auraCps', '.aura-moments-checkbox-btn', function(e) {
+				e.preventDefault();
+				self.handleCheckboxClick($(this));
+			});
+
+			// Moments "Add to Cart" text click
+			$(document).off('click.auraCps', '.aura-moments-add-text')
+					   .on('click.auraCps', '.aura-moments-add-text', function(e) {
+				e.preventDefault();
+				const $button = $(this).siblings('.aura-moments-checkbox-btn');
+				self.handleCheckboxClick($button);
+			});
+
 			// Show more/less button click
 			$(document).off('click.auraCps', '.aura-show-more-btn')
 					   .on('click.auraCps', '.aura-show-more-btn', function(e) {
@@ -251,11 +266,11 @@
 		},
 
 		/**
-		 * Handle checkbox button click (checkbox layout)
+		 * Handle checkbox button click (checkbox and moments layouts)
 		 */
 		handleCheckboxClick: function($button) {
 			const productId = $button.data('product-id');
-			const $card = $button.closest('.aura-checkbox-card');
+			const $card = $button.closest('.aura-checkbox-card, .aura-moments-card');
 			const isChecked = $button.attr('aria-checked') === 'true';
 			const newQuantity = isChecked ? 0 : 1;
 
@@ -438,6 +453,12 @@
 					if ($checkbox.length) {
 						$checkbox.attr('aria-checked', quantity > 0 ? 'true' : 'false');
 					}
+
+					// Update moments layout checkbox state
+					const $momentsCheckbox = $card.find('.aura-moments-checkbox-btn[data-product-id="' + productId + '"]');
+					if ($momentsCheckbox.length) {
+						$momentsCheckbox.attr('aria-checked', quantity > 0 ? 'true' : 'false');
+					}
 				});
 				return;
 			}
@@ -466,6 +487,12 @@
 							const $checkbox = $card.find('.aura-checkbox-btn[data-product-id="' + productId + '"]');
 							if ($checkbox.length) {
 								$checkbox.attr('aria-checked', quantity > 0 ? 'true' : 'false');
+							}
+
+							// Update moments layout checkbox state
+							const $momentsCheckbox = $card.find('.aura-moments-checkbox-btn[data-product-id="' + productId + '"]');
+							if ($momentsCheckbox.length) {
+								$momentsCheckbox.attr('aria-checked', quantity > 0 ? 'true' : 'false');
 							}
 						});
 					}
