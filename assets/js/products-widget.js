@@ -325,7 +325,7 @@
 
 			// Update total price
 			$card.find('.aura-total-price[data-product-id="' + productId + '"]').text(
-				total.toFixed(2) + ' ' + currency
+				currency + ' ' + total.toFixed(2)
 			);
 		},
 

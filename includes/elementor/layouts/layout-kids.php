@@ -127,18 +127,15 @@ $cart_quantities = aura_cps_get_all_cart_quantities();
 					<span class="aura-kids-total-label-free"><?php echo esc_html__( 'Total:', 'aura-custom-product-style' ); ?></span>
 					<span class="aura-kids-free"><?php echo esc_html__( 'Free', 'aura-custom-product-style' ); ?></span>
 				<?php else : ?>
-					<!-- Paid product: show Total on left, price on right -->
+					<!-- Paid product: show Total on left, calculated total on right -->
 					<span class="aura-kids-total-label">
 						<?php echo esc_html__( 'Total', 'aura-custom-product-style' ); ?>
-						<span class="aura-total-price" data-product-id="<?php echo esc_attr( $product_id ); ?>">
-							<?php
-							$initial_total = $initial_quantity * floatval( $product_price );
-							echo esc_html( get_woocommerce_currency_symbol() . ' ' . number_format( $initial_total, 2 ) );
-							?>
-						</span>
 					</span>
-					<span class="aura-kids-unit-price-right">
-						<?php echo esc_html( get_woocommerce_currency_symbol() ); ?> <?php echo esc_html( number_format( floatval( $product_price ), 2 ) ); ?>
+					<span class="aura-total-price" data-product-id="<?php echo esc_attr( $product_id ); ?>">
+						<?php
+						$initial_total = $initial_quantity * floatval( $product_price );
+						echo esc_html( get_woocommerce_currency_symbol() . ' ' . number_format( $initial_total, 2 ) );
+						?>
 					</span>
 				<?php endif; ?>
 			</div>
