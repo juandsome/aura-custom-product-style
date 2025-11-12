@@ -131,24 +131,30 @@
 				const rowsVisible = parseInt($grid.attr('data-rows-visible')) || 2;
 				const $cards = $grid.find('.aura-product-card');
 				const totalCards = $cards.length;
+				const cardWidth = parseInt($grid.attr('data-card-width')) || 350;
 
 				let columns;
 				if (columnsMode === 'auto') {
-					// Calculate columns based on actual card positions
-					if ($cards.length > 1) {
-						const firstCardTop = $cards.eq(0).offset().top;
-						let cardsInFirstRow = 1;
-
-						for (let i = 1; i < $cards.length; i++) {
-							if (Math.abs($cards.eq(i).offset().top - firstCardTop) < 5) {
-								cardsInFirstRow++;
-							} else {
-								break;
-							}
-						}
-						columns = cardsInFirstRow;
+					// If card_width is 0, use data-columns-count (Items Per Row mode)
+					if (cardWidth === 0) {
+						columns = parseInt($grid.attr('data-columns-count')) || 2;
 					} else {
-						columns = 1;
+						// Calculate columns based on actual card positions
+						if ($cards.length > 1) {
+							const firstCardTop = $cards.eq(0).offset().top;
+							let cardsInFirstRow = 1;
+
+							for (let i = 1; i < $cards.length; i++) {
+								if (Math.abs($cards.eq(i).offset().top - firstCardTop) < 5) {
+									cardsInFirstRow++;
+								} else {
+									break;
+								}
+							}
+							columns = cardsInFirstRow;
+						} else {
+							columns = 1;
+						}
 					}
 				} else {
 					columns = parseInt($grid.attr('data-columns-count')) || 2;
