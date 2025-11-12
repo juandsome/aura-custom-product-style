@@ -21,11 +21,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 $columns_mode = ! empty( $settings['columns_mode'] ) ? $settings['columns_mode'] : 'auto';
 $columns_count = 2; // Default
 $card_width = 350; // Default
+$auto_columns_count = 0; // Default
 
 if ( $columns_mode === 'fixed' && ! empty( $settings['columns_count'] ) ) {
 	$columns_count = intval( $settings['columns_count'] );
-} elseif ( $columns_mode === 'auto' && ! empty( $settings['card_width']['size'] ) ) {
-	$card_width = intval( $settings['card_width']['size'] );
+} elseif ( $columns_mode === 'auto' ) {
+	// Check if auto_columns_count is set
+	if ( ! empty( $settings['auto_columns_count'] ) && intval( $settings['auto_columns_count'] ) > 0 ) {
+		$auto_columns_count = intval( $settings['auto_columns_count'] );
+		$columns_count = $auto_columns_count;
+		$card_width = 0; // Use flex distribution
+	} elseif ( ! empty( $settings['card_width']['size'] ) ) {
+		$card_width = intval( $settings['card_width']['size'] );
+		// If card_width is 0, use flex distribution
+		if ( $card_width === 0 ) {
+			$columns_count = 2; // Default for flex distribution
+		}
+	}
 }
 
 $rows_visible = ! empty( $settings['rows_visible'] ) ? intval( $settings['rows_visible'] ) : 2;

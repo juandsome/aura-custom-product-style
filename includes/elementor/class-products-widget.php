@@ -317,6 +317,21 @@ class Products_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
+			'auto_columns_count',
+			array(
+				'label'       => esc_html__( 'Items Per Row', 'aura-custom-product-style' ),
+				'type'        => Controls_Manager::NUMBER,
+				'default'     => 0,
+				'min'         => 0,
+				'max'         => 4,
+				'description' => esc_html__( 'Number of items per row in auto mode. Set to 0 to use card width instead.', 'aura-custom-product-style' ),
+				'condition'   => array(
+					'columns_mode' => 'auto',
+				),
+			)
+		);
+
+		$this->add_control(
 			'card_width',
 			array(
 				'label'      => esc_html__( 'Card Width (px)', 'aura-custom-product-style' ),
@@ -324,7 +339,7 @@ class Products_Widget extends Widget_Base {
 				'size_units' => array( 'px' ),
 				'range'      => array(
 					'px' => array(
-						'min' => 250,
+						'min' => 0,
 						'max' => 600,
 					),
 				),
@@ -332,8 +347,10 @@ class Products_Widget extends Widget_Base {
 					'unit' => 'px',
 					'size' => 350,
 				),
+				'description' => esc_html__( 'Set to 0 to distribute cards evenly. Only used if Items Per Row is 0.', 'aura-custom-product-style' ),
 				'condition'  => array(
 					'columns_mode' => 'auto',
+					'auto_columns_count' => 0,
 				),
 			)
 		);
