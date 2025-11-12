@@ -1,0 +1,442 @@
+/**
+ * Aura Custom Product Style - Kids Corner Layout Styles
+ * Row-based layout: Icon + Title + Controls, Description, Unit Price, Total/Free
+ *
+ * @package Aura_Custom_Product_Style
+ */
+
+/* ========================================
+   KIDS CARD STRUCTURE
+   ======================================== */
+
+.aura-kids-card {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #9A9A9A;
+	border-radius: 3px;
+	overflow: hidden;
+	background: #ffffff;
+	transition: box-shadow 0.3s ease;
+	padding: 20px;
+	gap: 20px;
+	height: 100%;
+	min-height: 100%;
+}
+
+.aura-kids-card:hover {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   ROW 1: Icon + Title (left) | Controls (right)
+   ======================================== */
+
+.aura-kids-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 20px;
+}
+
+/* Left side: Icon + Title */
+.aura-kids-title-wrapper {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.aura-kids-icon {
+	flex: 0 0 48px;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-color: #f5f5f5;
+	border: 1px solid #ddd;
+}
+
+.aura-kids-card .aura-product-title {
+	flex: 1;
+	margin: 0 !important;
+	padding: 0 !important;
+	font-family: 'Alice', serif !important;
+	font-weight: 400 !important;
+	font-style: normal !important;
+	font-size: 1.3em !important;
+	line-height: 135% !important;
+	color: #333 !important;
+}
+
+/* Right side: Controls */
+.aura-kids-card .aura-product-controls {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.aura-kids-card .aura-btn {
+	flex: 0 0 auto;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	margin: 0;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	transition: opacity 0.2s ease;
+	outline: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.aura-kids-card .aura-btn:hover {
+	opacity: 0.7;
+}
+
+.aura-kids-card .aura-btn:active {
+	transform: scale(0.95);
+}
+
+.aura-kids-card .aura-btn img {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+.aura-kids-card .aura-quantity-display {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 600;
+	font-size: 1em;
+	line-height: 1;
+	color: #333;
+	min-width: 24px;
+	text-align: center;
+}
+
+/* ========================================
+   ROW 2: Description
+   ======================================== */
+
+.aura-kids-description {
+	font-family: 'Open Sans', sans-serif !important;
+	font-weight: 400 !important;
+	font-style: normal !important;
+	font-size: 1em !important;
+	line-height: 150% !important;
+	color: #666 !important;
+	margin: 0 !important;
+}
+
+.aura-kids-description p {
+	margin: 0 0 8px 0;
+	font-family: inherit !important;
+	font-size: inherit !important;
+	line-height: inherit !important;
+}
+
+.aura-kids-description p:last-child {
+	margin-bottom: 0;
+}
+
+/* ========================================
+   ROW 3: Unit Price (right-aligned, only if > 0)
+   ======================================== */
+
+.aura-kids-unit-price {
+	font-family: 'Open Sans', sans-serif !important;
+	font-weight: 700 !important;
+	font-style: normal !important;
+	font-size: 1.1em !important;
+	line-height: 150% !important;
+	color: #333 !important;
+	text-align: right;
+	margin: 0 !important;
+}
+
+/* ========================================
+   ROW 4: Total (left) | Price or Free (right)
+   ======================================== */
+
+.aura-kids-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 20px;
+	border-top: 1px solid #9A9A9A;
+	gap: 15px;
+}
+
+/* Total label + calculated price (left side) */
+.aura-kids-total-label {
+	flex: 0 0 auto;
+	font-family: 'Open Sans', sans-serif !important;
+	font-weight: 700 !important;
+	font-style: normal !important;
+	font-size: 1.1em !important;
+	line-height: 150% !important;
+	color: #333 !important;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.aura-kids-total-label .aura-total-price {
+	font-family: inherit !important;
+	font-weight: inherit !important;
+	font-size: inherit !important;
+	line-height: inherit !important;
+}
+
+/* Unit price on right side of footer */
+.aura-kids-unit-price-right {
+	flex: 0 0 auto;
+	font-family: 'Open Sans', sans-serif !important;
+	font-weight: 700 !important;
+	font-style: normal !important;
+	font-size: 1.1em !important;
+	line-height: 150% !important;
+	color: #333 !important;
+	text-align: right;
+}
+
+/* Free text (right side, for free products) */
+.aura-kids-free {
+	flex: 0 0 auto;
+	font-family: 'Open Sans', sans-serif !important;
+	font-weight: 700 !important;
+	font-style: normal !important;
+	font-size: 1.1em !important;
+	line-height: 150% !important;
+	color: #333 !important;
+	text-align: right;
+}
+
+/* ========================================
+   LOADING STATE
+   ======================================== */
+
+.aura-kids-card.loading {
+	opacity: 0.6;
+}
+
+.aura-kids-card.loading .aura-btn {
+	pointer-events: none;
+	opacity: 0.3;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet */
+@media screen and (max-width: 768px) {
+	.aura-kids-card {
+		padding: 15px;
+		gap: 15px;
+	}
+
+	.aura-kids-header {
+		gap: 15px;
+	}
+
+	.aura-kids-title-wrapper {
+		gap: 12px;
+	}
+
+	.aura-kids-icon {
+		flex: 0 0 40px;
+		width: 40px;
+		height: 40px;
+	}
+
+	.aura-kids-card .aura-product-title {
+		font-size: 1.2em !important;
+	}
+
+	.aura-kids-description {
+		font-size: 0.95em !important;
+	}
+
+	.aura-kids-unit-price,
+	.aura-kids-total-label,
+	.aura-kids-unit-price-right,
+	.aura-kids-free {
+		font-size: 1em !important;
+	}
+
+	.aura-kids-footer {
+		padding-top: 15px;
+	}
+}
+
+/* Mobile */
+@media screen and (max-width: 480px) {
+	.aura-kids-card {
+		padding: 12px;
+		gap: 12px;
+	}
+
+	.aura-kids-header {
+		gap: 12px;
+	}
+
+	.aura-kids-title-wrapper {
+		gap: 10px;
+	}
+
+	.aura-kids-icon {
+		flex: 0 0 36px;
+		width: 36px;
+		height: 36px;
+	}
+
+	.aura-kids-card .aura-product-title {
+		font-size: 1em !important;
+	}
+
+	.aura-kids-card .aura-btn {
+		width: 28px;
+		height: 28px;
+	}
+
+	.aura-kids-card .aura-quantity-display {
+		font-size: 0.9em;
+		min-width: 20px;
+	}
+
+	.aura-kids-description {
+		font-size: 0.85em !important;
+	}
+
+	.aura-kids-unit-price,
+	.aura-kids-total-label,
+	.aura-kids-unit-price-right,
+	.aura-kids-free {
+		font-size: 0.9em !important;
+	}
+
+	.aura-kids-footer {
+		padding-top: 12px;
+		gap: 10px;
+	}
+}
+
+/* ========================================
+   ELEMENTOR PREVIEW FIXES
+   ======================================== */
+
+.elementor-editor-active .aura-kids-card {
+	pointer-events: auto;
+}
+
+.elementor-editor-active .aura-kids-card.hidden-item {
+	display: flex;
+	opacity: 0.3;
+}
+
+/* ========================================
+   RTL SUPPORT
+   ======================================== */
+
+.rtl .aura-kids-header {
+	flex-direction: row-reverse;
+}
+
+.rtl .aura-kids-title-wrapper {
+	flex-direction: row-reverse;
+}
+
+.rtl .aura-kids-footer {
+	flex-direction: row-reverse;
+}
+
+.rtl .aura-kids-unit-price {
+	text-align: left;
+}
+
+.rtl .aura-kids-unit-price-right {
+	text-align: left;
+}
+
+.rtl .aura-kids-free {
+	text-align: left;
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+	.aura-kids-card {
+		border: 1px solid #000;
+		page-break-inside: avoid;
+		box-shadow: none;
+	}
+
+	.aura-kids-card .aura-btn {
+		display: none;
+	}
+}
+
+/* ========================================
+   CUSTOM ELEMENTOR OVERRIDES
+   ======================================== */
+
+.aura-kids-card * {
+	box-sizing: border-box;
+}
+
+/* Reset Elementor defaults that might interfere */
+.aura-kids-card .aura-product-title,
+.aura-kids-description,
+.aura-kids-unit-price,
+.aura-kids-total-label,
+.aura-kids-unit-price-right,
+.aura-kids-free {
+	text-transform: none !important;
+	letter-spacing: normal !important;
+}
+
+/* ========================================
+   DARK MODE SUPPORT (if theme supports it)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+	.aura-kids-card {
+		background: #1a1a1a;
+		border-color: #444;
+	}
+
+	.aura-kids-card .aura-product-title {
+		color: #fff !important;
+	}
+
+	.aura-kids-description {
+		color: #ccc !important;
+	}
+
+	.aura-kids-unit-price,
+	.aura-kids-total-label,
+	.aura-kids-unit-price-right,
+	.aura-kids-free {
+		color: #fff !important;
+	}
+
+	.aura-kids-icon {
+		background-color: #2a2a2a;
+		border-color: #555;
+	}
+
+	.aura-kids-card .aura-quantity-display {
+		color: #fff;
+	}
+
+	.aura-kids-footer {
+		border-color: #666;
+	}
+}
