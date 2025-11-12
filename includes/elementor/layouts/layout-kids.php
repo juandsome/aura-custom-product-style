@@ -111,18 +111,20 @@ $cart_quantities = aura_cps_get_all_cart_quantities();
 				</div>
 			<?php endif; ?>
 
-			<!-- Row 3: Unit Price (only if price > 0) -->
-			<?php if ( ! $is_free ) : ?>
-				<div class="aura-kids-unit-price">
+			<!-- Row 3: Unit Price (always shown to maintain structure) -->
+			<div class="aura-kids-unit-price">
+				<?php if ( ! $is_free ) : ?>
 					<?php echo esc_html( get_woocommerce_currency_symbol() ); ?> <?php echo esc_html( number_format( floatval( $product_price ), 2 ) ); ?>
-				</div>
-			<?php endif; ?>
+				<?php else : ?>
+					&nbsp;
+				<?php endif; ?>
+			</div>
 
-			<!-- Row 4: Total (left) | Free or empty (right) -->
+			<!-- Row 4: Total (left) | Free or Price (right) -->
 			<div class="aura-kids-footer">
 				<?php if ( $is_free ) : ?>
-					<!-- Free product: show "Free" on the right -->
-					<span class="aura-kids-total-label"></span>
+					<!-- Free product: show "Total:" on left, "Free" on the right -->
+					<span class="aura-kids-total-label-free"><?php echo esc_html__( 'Total:', 'aura-custom-product-style' ); ?></span>
 					<span class="aura-kids-free"><?php echo esc_html__( 'Free', 'aura-custom-product-style' ); ?></span>
 				<?php else : ?>
 					<!-- Paid product: show Total on left, price on right -->
