@@ -36,9 +36,6 @@
 			// Update visible rows for all widgets
 			this.updateAllVisibleRows();
 
-			// Equalize card heights
-			this.equalizeCardHeights();
-
 			// Load initial quantities from cart
 			this.loadInitialQuantities();
 		},
@@ -223,33 +220,6 @@
 					$showMoreWrapper.show();
 				} else {
 					$showMoreWrapper.hide();
-				}
-			});
-		},
-
-		/**
-		 * Equalize card heights within each widget
-		 */
-		equalizeCardHeights: function() {
-			$('.aura-products-wrapper').each(function() {
-				const $wrapper = $(this);
-				const $cards = $wrapper.find('.aura-product-card');
-
-				// Reset heights first
-				$cards.css('height', '');
-
-				// Get the tallest card height
-				let maxHeight = 0;
-				$cards.each(function() {
-					const cardHeight = $(this).outerHeight();
-					if (cardHeight > maxHeight) {
-						maxHeight = cardHeight;
-					}
-				});
-
-				// Set all cards to the same height
-				if (maxHeight > 0) {
-					$cards.css('height', maxHeight + 'px');
 				}
 			});
 		},
@@ -451,12 +421,6 @@
 				// Expand
 				$grid.addClass('expanded');
 				$btnText.text(showLessText);
-
-				// CSS handles display, but we need to trigger layout recalc
-				// Use setTimeout to ensure CSS has applied before recalculating
-				setTimeout(function() {
-					self.equalizeCardHeights();
-				}, 50);
 			}
 		},
 
@@ -653,9 +617,6 @@
 		handleResize: function() {
 			// Update visible rows
 			this.updateAllVisibleRows();
-
-			// Re-equalize card heights
-			this.equalizeCardHeights();
 		}
 	};
 
