@@ -396,6 +396,41 @@ class Products_Widget extends Widget_Base {
 		);
 
 		$this->add_control(
+			'card_min_height',
+			array(
+				'label'      => esc_html__( 'Card Min Height', 'aura-custom-product-style' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', 'em', 'vh', '%' ),
+				'range'      => array(
+					'px' => array(
+						'min' => 0,
+						'max' => 1000,
+					),
+					'em' => array(
+						'min' => 0,
+						'max' => 50,
+					),
+					'vh' => array(
+						'min' => 0,
+						'max' => 100,
+					),
+					'%' => array(
+						'min' => 0,
+						'max' => 100,
+					),
+				),
+				'default'    => array(
+					'unit' => 'px',
+					'size' => 0,
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .aura-product-card' => 'min-height: {{SIZE}}{{UNIT}};',
+				),
+				'description' => esc_html__( 'Set minimum height for all cards. Use 0 for auto height.', 'aura-custom-product-style' ),
+			)
+		);
+
+		$this->add_control(
 			'price_unit_text',
 			array(
 				'label'       => esc_html__( 'Price Unit Text', 'aura-custom-product-style' ),
