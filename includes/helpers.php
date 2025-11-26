@@ -177,6 +177,18 @@ function aura_cps_get_products( $settings = array() ) {
 		}
 	}
 
+	// Step 6: Sort products by menu_order (WooCommerce manual sort order)
+	if ( ! empty( $verified_ids ) ) {
+		global $wpdb;
+		$ids_string = implode( ',', array_map( 'intval', $verified_ids ) );
+		$sorted_ids = $wpdb->get_col(
+			"SELECT ID FROM {$wpdb->posts}
+			 WHERE ID IN ({$ids_string})
+			 ORDER BY menu_order ASC, post_title ASC"
+		);
+		$verified_ids = array_map( 'intval', $sorted_ids );
+	}
+
 	return $verified_ids;
 }
 
