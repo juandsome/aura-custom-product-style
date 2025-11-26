@@ -93,34 +93,6 @@
 				self.handleCheckboxClick($button);
 			});
 
-			// Form layout: input changes (validation)
-			$(document).off('input.auraCps change.auraCps', '.aura-form-input, .aura-form-textarea')
-					   .on('input.auraCps change.auraCps', '.aura-form-input, .aura-form-textarea', function() {
-				const $input = $(this);
-				const $card = $input.closest('.aura-form-card');
-				self.validateForm($card);
-			});
-
-			// Form layout: confirm button click
-			$(document).off('click.auraCps', '.aura-form-checkbox-btn')
-					   .on('click.auraCps', '.aura-form-checkbox-btn', function(e) {
-				e.preventDefault();
-				const $button = $(this);
-				if (!$button.prop('disabled')) {
-					self.handleFormConfirm($button);
-				}
-			});
-
-			// Form layout: confirm text click
-			$(document).off('click.auraCps', '.aura-form-confirm-text')
-					   .on('click.auraCps', '.aura-form-confirm-text', function(e) {
-				e.preventDefault();
-				const $button = $(this).siblings('.aura-form-checkbox-btn');
-				if (!$button.prop('disabled')) {
-					self.handleFormConfirm($button);
-				}
-			});
-
 			// Show more/less button click
 			$(document).off('click.auraCps', '.aura-show-more-btn')
 					   .on('click.auraCps', '.aura-show-more-btn', function(e) {
@@ -461,111 +433,6 @@
 		},
 
 		/**
-		 * Validate form fields and enable/disable confirm button
-		 */
-		validateForm: function($card) {
-			const $detailsInput = $card.find('.aura-form-details');
-			const $confirmBtn = $card.find('.aura-form-checkbox-btn');
-
-			const details = $detailsInput.val().trim();
-
-			// Enable button only if details field has content
-			const isValid = details.length > 0;
-			$confirmBtn.prop('disabled', !isValid);
-		},
-
-		/**
-		 * Handle form confirm button click
-		 */
-		handleFormConfirm: function($button) {
-			const $card = $button.closest('.aura-form-card');
-			const isChecked = $button.attr('aria-checked') === 'true';
-
-			// Get form data
-			const $detailsInput = $card.find('.aura-form-details');
-			const arrivalDetails = $detailsInput.val().trim();
-
-			if (isChecked) {
-				// Uncheck: unlock form, clear session, keep values
-				$button.attr('aria-checked', 'false');
-				$card.removeClass('confirmed');
-
-				// Enable form field
-				$detailsInput.prop('disabled', false);
-
-				// Clear from session
-				this.saveArrivalDetails('', false, $card, $button);
-			} else {
-				// Check: lock form, save to session
-				$button.attr('aria-checked', 'true');
-				$card.addClass('confirmed');
-
-				// Disable form field
-				$detailsInput.prop('disabled', true);
-
-				// Save to session
-				this.saveArrivalDetails(arrivalDetails, true, $card, $button);
-			}
-		},
-
-		/**
-		 * Save arrival details to session
-		 */
-		saveArrivalDetails: function(details, confirmed, $card, $button) {
-			const self = this;
-
-			// Add loading state
-			$card.addClass('loading');
-
-			$.ajax({
-				url: auraCpsData.ajaxUrl,
-				type: 'POST',
-				data: {
-					action: 'aura_cps_save_arrival_details',
-					nonce: auraCpsData.nonce,
-					arrival_details: details,
-					confirmed: confirmed
-				},
-				success: function(response) {
-					$card.removeClass('loading');
-
-					if (!response.success) {
-						// Revert checkbox and form state on error
-						const isChecked = $button.attr('aria-checked') === 'true';
-						$button.attr('aria-checked', !isChecked);
-
-						if (isChecked) {
-							$card.removeClass('confirmed');
-							$card.find('.aura-form-textarea').prop('disabled', false);
-						} else {
-							$card.addClass('confirmed');
-							$card.find('.aura-form-textarea').prop('disabled', true);
-						}
-
-						alert(response.data.message || 'Error saving arrival details');
-					}
-				},
-				error: function() {
-					$card.removeClass('loading');
-
-					// Revert checkbox and form state on error
-					const isChecked = $button.attr('aria-checked') === 'true';
-					$button.attr('aria-checked', !isChecked);
-
-					if (isChecked) {
-						$card.removeClass('confirmed');
-						$card.find('.aura-form-textarea').prop('disabled', false);
-					} else {
-						$card.addClass('confirmed');
-						$card.find('.aura-form-textarea').prop('disabled', true);
-					}
-
-					alert('An error occurred while saving arrival details');
-				}
-			});
-		},
-
-		/**
 		 * Load initial quantities from cart
 		 */
 		loadInitialQuantities: function() {
@@ -591,13 +458,6 @@
 					const $momentsCheckbox = $card.find('.aura-moments-checkbox-btn[data-product-id="' + productId + '"]');
 					if ($momentsCheckbox.length) {
 						$momentsCheckbox.attr('aria-checked', quantity > 0 ? 'true' : 'false');
-					}
-
-					// Update form layout state (no cart dependency, just validate)
-					const $formCheckbox = $card.find('.aura-form-checkbox-btn');
-					if ($formCheckbox.length) {
-						// Validate form to set button state
-						self.validateForm($card);
 					}
 				});
 				return;
@@ -633,13 +493,6 @@
 							const $momentsCheckbox = $card.find('.aura-moments-checkbox-btn[data-product-id="' + productId + '"]');
 							if ($momentsCheckbox.length) {
 								$momentsCheckbox.attr('aria-checked', quantity > 0 ? 'true' : 'false');
-							}
-
-							// Update form layout state (no cart dependency, just validate)
-							const $formCheckbox = $card.find('.aura-form-checkbox-btn');
-							if ($formCheckbox.length) {
-								// Validate form to set button state
-								self.validateForm($card);
 							}
 						});
 					}

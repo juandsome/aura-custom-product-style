@@ -1,0 +1,461 @@
+/**
+ * Aura Custom Product Style - Form Layout Styles
+ * Form-based layout with Name, Email, Details fields and Confirm button
+ *
+ * @package Aura_Custom_Product_Style
+ */
+
+/* ========================================
+   FORM CARD STRUCTURE
+   ======================================== */
+
+.aura-form-card {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #9A9A9A;
+	border-radius: 3px;
+	overflow: hidden;
+	background: transparent;
+	transition: box-shadow 0.3s ease, opacity 0.3s ease;
+	padding: 20px;
+	gap: 20px;
+	height: 100%;
+	min-height: 100%;
+}
+
+.aura-form-card:hover {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Confirmed state - form is locked and opaque */
+.aura-form-card.confirmed {
+	opacity: 0.6;
+}
+
+/* ========================================
+   TITLE
+   ======================================== */
+
+.aura-form-card .aura-product-title {
+	margin: 0 !important;
+	padding: 0 !important;
+	font-family: 'Alice', serif !important;
+	font-weight: 400 !important;
+	font-style: normal !important;
+	font-size: 1.3em !important;
+	line-height: 135% !important;
+	color: #333 !important;
+}
+
+/* ========================================
+   DESCRIPTION
+   ======================================== */
+
+.aura-form-description {
+	font-family: 'Open Sans', sans-serif !important;
+	font-weight: 400 !important;
+	font-style: normal !important;
+	font-size: 1em !important;
+	line-height: 150% !important;
+	color: #666 !important;
+	margin: 0 !important;
+}
+
+.aura-form-description p {
+	margin: 0 0 8px 0;
+	font-family: inherit !important;
+	font-size: inherit !important;
+	line-height: inherit !important;
+}
+
+.aura-form-description p:last-child {
+	margin-bottom: 0;
+}
+
+/* ========================================
+   FORM FIELDS
+   ======================================== */
+
+.aura-form-fields {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.aura-form-field {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.aura-form-label {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 600;
+	font-size: 0.95em;
+	line-height: 1.4;
+	color: #333;
+	margin: 0;
+}
+
+.aura-form-input,
+.aura-form-textarea {
+	width: 100%;
+	padding: 12px 15px;
+	border: 1px solid #9A9A9A;
+	border-radius: 3px;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	font-size: 1em;
+	line-height: 1.5;
+	color: #333;
+	background: #fff;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	outline: none;
+	box-sizing: border-box;
+}
+
+.aura-form-input:focus,
+.aura-form-textarea:focus {
+	border-color: #333;
+	box-shadow: 0 0 0 1px #333;
+}
+
+.aura-form-input:disabled,
+.aura-form-textarea:disabled {
+	background: #f5f5f5;
+	color: #999;
+	cursor: not-allowed;
+}
+
+.aura-form-input::placeholder,
+.aura-form-textarea::placeholder {
+	color: #999;
+	opacity: 1;
+}
+
+/* Email validation states */
+.aura-form-email.invalid {
+	border-color: #dc3545;
+}
+
+.aura-form-email.invalid:focus {
+	box-shadow: 0 0 0 1px #dc3545;
+}
+
+.aura-form-textarea {
+	resize: vertical;
+	min-height: 80px;
+}
+
+/* ========================================
+   CONFIRM BUTTON FOOTER
+   ======================================== */
+
+.aura-form-footer {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding-top: 20px;
+	border-top: 1px solid #9A9A9A;
+}
+
+.aura-form-confirm-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* Checkbox Button */
+.aura-form-checkbox-btn {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border: 2px solid #333;
+	border-radius: 3px;
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	outline: none;
+	padding: 0;
+	margin: 0;
+}
+
+.aura-form-checkbox-btn:not(:disabled):hover {
+	background-color: #f5f5f5;
+	border-color: #000;
+}
+
+.aura-form-checkbox-btn:not(:disabled):active {
+	transform: scale(0.95);
+}
+
+/* Disabled state (form not valid) */
+.aura-form-checkbox-btn:disabled {
+	border-color: #ccc;
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+/* Checkmark (hidden by default, shown when checked) */
+.aura-form-checkmark {
+	font-size: 18px;
+	line-height: 1;
+	color: #333;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+/* Checked state */
+.aura-form-checkbox-btn[aria-checked="true"] {
+	background-color: #333;
+	border-color: #333;
+}
+
+.aura-form-checkbox-btn[aria-checked="true"] .aura-form-checkmark {
+	opacity: 1;
+	color: #fff;
+}
+
+/* Confirm text */
+.aura-form-confirm-text {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	font-size: 1em;
+	line-height: 150%;
+	color: #333;
+	user-select: none;
+}
+
+/* ========================================
+   LOADING STATE
+   ======================================== */
+
+.aura-form-card.loading {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.aura-form-card.loading .aura-form-checkbox-btn {
+	pointer-events: none;
+	opacity: 0.3;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet */
+@media screen and (max-width: 768px) {
+	.aura-form-card {
+		padding: 15px;
+		gap: 15px;
+	}
+
+	.aura-form-card .aura-product-title {
+		font-size: 1.2em !important;
+	}
+
+	.aura-form-description {
+		font-size: 0.95em !important;
+	}
+
+	.aura-form-fields {
+		gap: 12px;
+	}
+
+	.aura-form-input,
+	.aura-form-textarea {
+		padding: 10px 12px;
+		font-size: 0.95em;
+	}
+
+	.aura-form-footer {
+		padding-top: 15px;
+	}
+
+	.aura-form-confirm-text {
+		font-size: 0.95em;
+	}
+}
+
+/* Mobile */
+@media screen and (max-width: 480px) {
+	.aura-form-card {
+		padding: 12px;
+		gap: 12px;
+	}
+
+	.aura-form-card .aura-product-title {
+		font-size: 1em !important;
+	}
+
+	.aura-form-description {
+		font-size: 0.85em !important;
+	}
+
+	.aura-form-fields {
+		gap: 10px;
+	}
+
+	.aura-form-label {
+		font-size: 0.9em;
+	}
+
+	.aura-form-input,
+	.aura-form-textarea {
+		padding: 10px 12px;
+		font-size: 0.9em;
+	}
+
+	.aura-form-footer {
+		padding-top: 12px;
+	}
+
+	.aura-form-checkbox-btn {
+		width: 28px;
+		height: 28px;
+	}
+
+	.aura-form-checkmark {
+		font-size: 16px;
+	}
+
+	.aura-form-confirm-text {
+		font-size: 0.85em;
+	}
+}
+
+/* ========================================
+   ELEMENTOR PREVIEW FIXES
+   ======================================== */
+
+.elementor-editor-active .aura-form-card {
+	pointer-events: auto;
+}
+
+.elementor-editor-active .aura-form-card.hidden-item {
+	display: flex;
+	opacity: 0.3;
+}
+
+/* ========================================
+   RTL SUPPORT
+   ======================================== */
+
+.rtl .aura-form-footer {
+	flex-direction: row-reverse;
+}
+
+.rtl .aura-form-confirm-wrapper {
+	flex-direction: row-reverse;
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+	.aura-form-card {
+		border: 1px solid #000;
+		page-break-inside: avoid;
+		box-shadow: none;
+	}
+
+	.aura-form-checkbox-btn {
+		display: none;
+	}
+}
+
+/* ========================================
+   CUSTOM ELEMENTOR OVERRIDES
+   ======================================== */
+
+.aura-form-card * {
+	box-sizing: border-box;
+}
+
+/* Reset Elementor defaults that might interfere */
+.aura-form-card .aura-product-title,
+.aura-form-description,
+.aura-form-label,
+.aura-form-input,
+.aura-form-textarea,
+.aura-form-confirm-text {
+	text-transform: none !important;
+	letter-spacing: normal !important;
+}
+
+/* ========================================
+   DARK MODE SUPPORT (if theme supports it)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+	.aura-form-card {
+		background: #1a1a1a;
+		border-color: #444;
+	}
+
+	.aura-form-card .aura-product-title {
+		color: #fff !important;
+	}
+
+	.aura-form-description {
+		color: #ccc !important;
+	}
+
+	.aura-form-label {
+		color: #fff;
+	}
+
+	.aura-form-input,
+	.aura-form-textarea {
+		background: #2a2a2a;
+		border-color: #666;
+		color: #fff;
+	}
+
+	.aura-form-input:focus,
+	.aura-form-textarea:focus {
+		border-color: #fff;
+		box-shadow: 0 0 0 1px #fff;
+	}
+
+	.aura-form-input:disabled,
+	.aura-form-textarea:disabled {
+		background: #1a1a1a;
+		color: #666;
+	}
+
+	.aura-form-checkbox-btn {
+		border-color: #666;
+	}
+
+	.aura-form-checkbox-btn:not(:disabled):hover {
+		background-color: #333;
+		border-color: #fff;
+	}
+
+	.aura-form-checkbox-btn[aria-checked="true"] {
+		background-color: #fff;
+		border-color: #fff;
+	}
+
+	.aura-form-checkbox-btn[aria-checked="true"] .aura-form-checkmark {
+		color: #000;
+	}
+
+	.aura-form-checkmark {
+		color: #fff;
+	}
+
+	.aura-form-confirm-text {
+		color: #fff;
+	}
+
+	.aura-form-footer {
+		border-color: #666;
+	}
+}

@@ -3,7 +3,7 @@
  * Plugin Name: Aura Custom Product Style
  * Plugin URI: https://collectionaura.com
  * Description: Elementor widgets to display WooCommerce products related to villas in cart with multiple layout options
- * Version: 1.3.4
+ * Version: 1.4.0
  * Author: Collection Aura
  * Author URI: https://collectionaura.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'AURA_CPS_VERSION', '1.3.4' );
+define( 'AURA_CPS_VERSION', '1.4.0' );
 define( 'AURA_CPS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AURA_CPS_URL', plugin_dir_url( __FILE__ ) );
 define( 'AURA_CPS_BASENAME', plugin_basename( __FILE__ ) );
@@ -73,6 +73,11 @@ class Aura_Custom_Product_Style {
 		add_action( 'wp_ajax_nopriv_aura_cps_update_product_quantity', array( $this, 'ajax_update_product_quantity' ) );
 		add_action( 'wp_ajax_aura_cps_get_cart_quantities', array( $this, 'ajax_get_cart_quantities' ) );
 		add_action( 'wp_ajax_nopriv_aura_cps_get_cart_quantities', array( $this, 'ajax_get_cart_quantities' ) );
+		add_action( 'wp_ajax_aura_cps_save_arrival_details', array( $this, 'ajax_save_arrival_details' ) );
+		add_action( 'wp_ajax_nopriv_aura_cps_save_arrival_details', array( $this, 'ajax_save_arrival_details' ) );
+
+		// WooCommerce hooks
+		add_action( 'woocommerce_checkout_create_order', array( $this, 'add_arrival_details_to_order' ), 10, 2 );
 	}
 
 	/**
@@ -147,6 +152,14 @@ class Aura_Custom_Product_Style {
 		wp_enqueue_style(
 			'aura-cps-layout-moments',
 			AURA_CPS_URL . 'assets/css/layout-moments.css',
+			array( 'aura-cps-widget-base' ),
+			AURA_CPS_VERSION
+		);
+
+		// Enqueue form layout CSS
+		wp_enqueue_style(
+			'aura-cps-layout-form',
+			AURA_CPS_URL . 'assets/css/layout-form.css',
 			array( 'aura-cps-widget-base' ),
 			AURA_CPS_VERSION
 		);
@@ -268,6 +281,57 @@ class Aura_Custom_Product_Style {
 		wp_send_json_success( array(
 			'quantities' => $cart_quantities,
 		) );
+	}
+
+	/**
+	 * AJAX: Save arrival details to session
+	 */
+	public function ajax_save_arrival_details() {
+		// Verify nonce
+		check_ajax_referer( 'aura_cps_nonce', 'nonce' );
+
+		$arrival_details = isset( $_POST['arrival_details'] ) ? sanitize_textarea_field( wp_unslash( $_POST['arrival_details'] ) ) : '';
+		$confirmed = isset( $_POST['confirmed'] ) && $_POST['confirmed'] === 'true';
+
+		// Save to WooCommerce session
+		if ( function_exists( 'WC' ) && WC()->session ) {
+			WC()->session->set( 'aura_arrival_details', $arrival_details );
+			WC()->session->set( 'aura_arrival_confirmed', $confirmed );
+			wp_send_json_success();
+		} else {
+			wp_send_json_error( array( 'message' => 'Session not available' ) );
+		}
+	}
+
+	/**
+	 * Add arrival details to order as private note
+	 *
+	 * @param WC_Order $order The order object
+	 * @param array    $data  The order data
+	 */
+	public function add_arrival_details_to_order( $order, $data ) {
+		// Check if we have arrival details in session
+		if ( ! function_exists( 'WC' ) || ! WC()->session ) {
+			return;
+		}
+
+		$arrival_details = WC()->session->get( 'aura_arrival_details', '' );
+		$confirmed = WC()->session->get( 'aura_arrival_confirmed', false );
+
+		// Only add note if confirmed and has details
+		if ( $confirmed && ! empty( $arrival_details ) ) {
+			$note = sprintf(
+				"Arrival Information:\n\n%s",
+				$arrival_details
+			);
+
+			// Add as private note (not visible to customer)
+			$order->add_order_note( $note, false, false );
+
+			// Clear session data after adding to order
+			WC()->session->set( 'aura_arrival_details', '' );
+			WC()->session->set( 'aura_arrival_confirmed', false );
+		}
 	}
 }
 

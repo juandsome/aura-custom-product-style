@@ -87,7 +87,8 @@ class Products_Widget extends Widget_Base {
 			'aura-cps-layout-checkbox',
 			'aura-cps-layout-wine',
 			'aura-cps-layout-kids',
-			'aura-cps-layout-moments'
+			'aura-cps-layout-moments',
+			'aura-cps-layout-form'
 		);
 	}
 
@@ -118,6 +119,7 @@ class Products_Widget extends Widget_Base {
 					'wine'     => esc_html__( 'Wine Layout', 'aura-custom-product-style' ),
 					'kids'     => esc_html__( 'Kids Corner Layout', 'aura-custom-product-style' ),
 					'moments'  => esc_html__( 'Moments Layout', 'aura-custom-product-style' ),
+					'form'     => esc_html__( 'Form Layout', 'aura-custom-product-style' ),
 				),
 			)
 		);
