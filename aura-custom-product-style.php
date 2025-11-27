@@ -3,7 +3,7 @@
  * Plugin Name: Aura Custom Product Style
  * Plugin URI: https://collectionaura.com
  * Description: Elementor widgets to display WooCommerce products related to villas in cart with multiple layout options
- * Version: 1.5.0
+ * Version: 1.5.1
  * Author: Collection Aura
  * Author URI: https://collectionaura.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'AURA_CPS_VERSION', '1.5.0' );
+define( 'AURA_CPS_VERSION', '1.5.1' );
 define( 'AURA_CPS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AURA_CPS_URL', plugin_dir_url( __FILE__ ) );
 define( 'AURA_CPS_BASENAME', plugin_basename( __FILE__ ) );
@@ -78,6 +78,7 @@ class Aura_Custom_Product_Style {
 
 		// WooCommerce hooks
 		add_action( 'woocommerce_checkout_create_order', array( $this, 'add_arrival_details_to_order' ), 10, 2 );
+		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'display_arrival_details_in_admin' ), 10, 1 );
 	}
 
 	/**
@@ -333,9 +334,33 @@ class Aura_Custom_Product_Style {
 			// Add as private note (not visible to customer)
 			$order->add_order_note( $note, false, false );
 
+			// Also save as order meta for easier access
+			$order->update_meta_data( '_aura_arrival_details', $arrival_details );
+			$order->save();
+
 			// Clear session data after adding to order
 			WC()->session->set( 'aura_arrival_details', '' );
 			WC()->session->set( 'aura_arrival_confirmed', false );
+		}
+	}
+
+	/**
+	 * Display arrival details in order admin page
+	 *
+	 * @param WC_Order $order The order object
+	 */
+	public function display_arrival_details_in_admin( $order ) {
+		$arrival_details = $order->get_meta( '_aura_arrival_details' );
+
+		if ( ! empty( $arrival_details ) ) {
+			?>
+			<div class="order_data_column" style="clear:both; padding-top: 13px;">
+				<h3><?php esc_html_e( 'Arrival Information', 'aura-custom-product-style' ); ?></h3>
+				<div style="padding: 12px; background: #f8f8f8; border: 1px solid #ddd; border-radius: 4px;">
+					<p style="margin: 0; white-space: pre-wrap; font-family: monospace;"><?php echo esc_html( $arrival_details ); ?></p>
+				</div>
+			</div>
+			<?php
 		}
 	}
 }
