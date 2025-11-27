@@ -65,18 +65,6 @@ $is_confirmed = WC()->session ? WC()->session->get( 'aura_arrival_confirmed', fa
 		<div class="aura-product-card aura-form-card <?php echo esc_attr( $is_hidden ); ?> <?php echo $is_confirmed ? 'confirmed' : ''; ?>"
 			 data-product-id="<?php echo esc_attr( $product_id ); ?>">
 
-			<!-- Title -->
-			<h3 class="aura-product-title">
-				<?php echo esc_html( $product_name ); ?>
-			</h3>
-
-			<!-- Description -->
-			<?php if ( ! empty( $product_description ) ) : ?>
-				<div class="aura-form-description">
-					<?php echo wp_kses_post( $product_description ); ?>
-				</div>
-			<?php endif; ?>
-
 			<!-- Form Fields -->
 			<div class="aura-form-fields">
 				<!-- Details Field -->

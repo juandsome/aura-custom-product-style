@@ -12,7 +12,7 @@
 .aura-form-card {
 	display: flex;
 	flex-direction: column;
-	border: 1px solid #9A9A9A;
+	border: none;
 	border-radius: 3px;
 	overflow: hidden;
 	background: transparent;
