@@ -88,6 +88,19 @@
 	width: 24px;
 	height: 24px;
 	padding: 0;
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+.aura-product-controls .aura-btn:hover,
+.aura-product-controls .aura-btn:focus,
+.aura-product-controls .aura-btn:active {
+	background: transparent !important;
+	box-shadow: none !important;
+	outline: none !important;
+	border: none !important;
 }
 
 .aura-product-controls .aura-quantity-display {

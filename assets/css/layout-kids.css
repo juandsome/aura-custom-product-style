@@ -82,22 +82,34 @@
 	height: 32px;
 	padding: 0;
 	margin: 0;
-	background: transparent;
-	border: none;
+	background: transparent !important;
+	border: none !important;
 	cursor: pointer;
 	transition: opacity 0.2s ease;
-	outline: none;
+	outline: none !important;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	box-shadow: none !important;
 }
 
 .aura-kids-card .aura-btn:hover {
 	opacity: 0.7;
+	background: transparent !important;
+	box-shadow: none !important;
+	outline: none !important;
 }
 
 .aura-kids-card .aura-btn:active {
 	transform: scale(0.95);
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+.aura-kids-card .aura-btn:focus {
+	outline: none !important;
+	box-shadow: none !important;
+	background: transparent !important;
 }
 
 .aura-kids-card .aura-btn img {

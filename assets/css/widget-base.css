@@ -117,18 +117,22 @@
 	justify-content: center;
 	padding: 0;
 	border: none;
-	background: transparent;
+	background: transparent !important;
 	cursor: pointer;
 	transition: opacity 0.2s ease, transform 0.1s ease;
 	outline: none;
+	box-shadow: none !important;
 }
 
 .aura-btn:hover {
 	opacity: 0.7;
+	background: transparent !important;
+	box-shadow: none !important;
 }
 
 .aura-btn:active {
 	transform: scale(0.95);
+	background: transparent !important;
 }
 
 /* Focus styles for accessibility */
@@ -169,20 +173,24 @@
 	justify-content: center;
 	gap: 8px;
 	padding: 10px 20px;
-	background: transparent;
+	background: transparent !important;
 	border: none;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 1.2em;
 	font-weight: 400;
-	color: #333;
+	color: #333 !important;
 	cursor: pointer;
 	transition: opacity 0.2s ease;
 	text-decoration: none;
 	outline: none;
+	box-shadow: none !important;
 }
 
 .aura-show-more-btn:hover {
 	opacity: 0.7;
+	background: transparent !important;
+	box-shadow: none !important;
+	color: #333 !important;
 }
 
 .aura-show-more-btn:focus-visible {
