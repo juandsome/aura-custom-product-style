@@ -328,25 +328,8 @@
    RESPONSIVE DESIGN
    ======================================== */
 
-/* Tablet */
-@media screen and (max-width: 768px) {
-	.aura-products-grid[data-columns-mode="fixed"][data-columns-count="4"],
-	.aura-products-grid[data-columns-mode="fixed"][data-columns-count="3"] {
-		grid-template-columns: repeat(2, 1fr);
-	}
-
-	.aura-show-more-btn {
-		font-size: 1em;
-		padding: 8px 16px;
-	}
-}
-
-/* Mobile */
+/* Mobile - General adjustments */
 @media screen and (max-width: 480px) {
-	.aura-products-grid[data-columns-mode="fixed"] {
-		grid-template-columns: 1fr;
-	}
-
 	.aura-products-grid[data-columns-mode="auto"] {
 		display: flex;
 		flex-direction: column;
@@ -360,6 +343,11 @@
 
 	.aura-products-grid {
 		gap: 15px;
+	}
+
+	.aura-show-more-btn {
+		font-size: 1em;
+		padding: 8px 16px;
 	}
 
 	.aura-show-more-wrapper {

@@ -249,17 +249,9 @@
 	}
 }
 
-/* Mobile - Keep horizontal layout (20% image, 80% content) */
+/* Mobile */
 @media screen and (max-width: 480px) {
-	/* Maintain horizontal layout */
-	.aura-wine-card {
-		flex-direction: row;
-	}
-
-	/* Keep image at 20% */
 	.aura-wine-card .aura-product-image {
-		flex: 0 0 34%;
-		max-width: 34%;
 		min-height: 150px;
 	}
 
@@ -293,7 +285,7 @@
 		gap: 10px;
 	}
 
-	.aura-wine-card .aura-qty-btn {
+	.aura-wine-card .aura-btn {
 		width: 28px;
 		height: 28px;
 	}
