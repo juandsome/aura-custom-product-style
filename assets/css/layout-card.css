@@ -355,7 +355,7 @@
 
 @media (prefers-color-scheme: dark) {
 	.aura-product-card {
-		background: #F3EDE6 !important;
+		background-color: #F3EDE6 !important;
 		border-color: #9A9A9A !important;
 		color: #333 !important;
 	}
