@@ -306,15 +306,17 @@ class Products_Widget extends Widget_Base {
 			)
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'columns_count',
 			array(
-				'label'     => esc_html__( 'Number of Columns', 'aura-custom-product-style' ),
-				'type'      => Controls_Manager::NUMBER,
-				'default'   => 2,
-				'min'       => 1,
-				'max'       => 4,
-				'condition' => array(
+				'label'           => esc_html__( 'Columns', 'aura-custom-product-style' ),
+				'type'            => Controls_Manager::NUMBER,
+				'min'             => 1,
+				'max'             => 4,
+				'default'         => 2,
+				'tablet_default'  => 2,
+				'mobile_default'  => 1,
+				'condition'       => array(
 					'columns_mode' => 'fixed',
 				),
 			)
@@ -359,15 +361,17 @@ class Products_Widget extends Widget_Base {
 			)
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'rows_visible',
 			array(
-				'label'       => esc_html__( 'Rows Visible', 'aura-custom-product-style' ),
-				'type'        => Controls_Manager::NUMBER,
-				'default'     => 2,
-				'min'         => 1,
-				'max'         => 10,
-				'description' => esc_html__( 'Number of rows to show before "Show More" button appears.', 'aura-custom-product-style' ),
+				'label'          => esc_html__( 'Rows Visible', 'aura-custom-product-style' ),
+				'type'           => Controls_Manager::NUMBER,
+				'min'            => 1,
+				'max'            => 10,
+				'default'        => 2,
+				'tablet_default' => 2,
+				'mobile_default' => 3,
+				'description'    => esc_html__( 'Number of rows to show before "Show More" button appears.', 'aura-custom-product-style' ),
 			)
 		);
 

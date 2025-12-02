@@ -6,6 +6,18 @@
  */
 
 /* ========================================
+   DARK MODE OVERRIDE
+   Force specific colors regardless of dark mode
+   ======================================== */
+
+.aura-products-wrapper,
+.aura-products-wrapper *,
+.aura-product-card,
+.aura-product-card * {
+	color-scheme: light !important;
+}
+
+/* ========================================
    CONTAINER STYLES
    ======================================== */
 
@@ -14,6 +26,8 @@
 	max-width: 100%;
 	margin: 0 auto;
 	position: relative;
+	background-color: transparent !important;
+	color: #333 !important;
 }
 
 /* Grid Container */
@@ -38,7 +52,7 @@
 	min-width: 0;
 }
 
-/* Fixed columns mode */
+/* Fixed columns mode - Desktop (default) */
 .aura-products-grid[data-columns-mode="fixed"][data-columns-count="1"] {
 	grid-template-columns: 1fr;
 }
@@ -53,6 +67,44 @@
 
 .aura-products-grid[data-columns-mode="fixed"][data-columns-count="4"] {
 	grid-template-columns: repeat(4, 1fr);
+}
+
+/* Fixed columns mode - Tablet (768px - 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count-tablet="1"] {
+		grid-template-columns: 1fr;
+	}
+
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count-tablet="2"] {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count-tablet="3"] {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count-tablet="4"] {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+/* Fixed columns mode - Mobile (< 768px) */
+@media screen and (max-width: 767px) {
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count-mobile="1"] {
+		grid-template-columns: 1fr;
+	}
+
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count-mobile="2"] {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count-mobile="3"] {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.aura-products-grid[data-columns-mode="fixed"][data-columns-count-mobile="4"] {
+		grid-template-columns: repeat(4, 1fr);
+	}
 }
 
 /* ========================================
@@ -184,6 +236,7 @@
 	text-decoration: none;
 	outline: none;
 	box-shadow: none !important;
+	-webkit-text-fill-color: #333 !important;
 }
 
 .aura-show-more-btn:hover {
@@ -191,6 +244,7 @@
 	background: transparent !important;
 	box-shadow: none !important;
 	color: #333 !important;
+	-webkit-text-fill-color: #333 !important;
 }
 
 .aura-show-more-btn:focus-visible {

@@ -19,12 +19,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Calculate columns based on mode
 $columns_mode = ! empty( $settings['columns_mode'] ) ? $settings['columns_mode'] : 'auto';
-$columns_count = 2; // Default
 $card_width = 350; // Default
 $auto_columns_count = 0; // Default
 
-if ( $columns_mode === 'fixed' && ! empty( $settings['columns_count'] ) ) {
-	$columns_count = intval( $settings['columns_count'] );
+// Responsive columns for fixed mode
+$columns_count = 2; // Default desktop
+$columns_count_tablet = 2; // Default tablet
+$columns_count_mobile = 1; // Default mobile
+
+if ( $columns_mode === 'fixed' ) {
+	$columns_count = ! empty( $settings['columns_count'] ) ? intval( $settings['columns_count'] ) : 2;
+	$columns_count_tablet = ! empty( $settings['columns_count_tablet'] ) ? intval( $settings['columns_count_tablet'] ) : 2;
+	$columns_count_mobile = ! empty( $settings['columns_count_mobile'] ) ? intval( $settings['columns_count_mobile'] ) : 1;
 } elseif ( $columns_mode === 'auto' ) {
 	// Check if auto_columns_count is set
 	if ( ! empty( $settings['auto_columns_count'] ) && intval( $settings['auto_columns_count'] ) > 0 ) {
@@ -40,7 +46,11 @@ if ( $columns_mode === 'fixed' && ! empty( $settings['columns_count'] ) ) {
 	}
 }
 
+// Responsive rows visible
 $rows_visible = ! empty( $settings['rows_visible'] ) ? intval( $settings['rows_visible'] ) : 2;
+$rows_visible_tablet = ! empty( $settings['rows_visible_tablet'] ) ? intval( $settings['rows_visible_tablet'] ) : 2;
+$rows_visible_mobile = ! empty( $settings['rows_visible_mobile'] ) ? intval( $settings['rows_visible_mobile'] ) : 3;
+
 $visible_items = $rows_visible * $columns_count;
 
 // Get cart quantities for initial state
@@ -51,8 +61,12 @@ $cart_quantities = aura_cps_get_all_cart_quantities();
 	<div class="aura-products-grid"
 		 data-columns-mode="<?php echo esc_attr( $columns_mode ); ?>"
 		 data-columns-count="<?php echo esc_attr( $columns_count ); ?>"
+		 data-columns-count-tablet="<?php echo esc_attr( $columns_count_tablet ); ?>"
+		 data-columns-count-mobile="<?php echo esc_attr( $columns_count_mobile ); ?>"
 		 data-card-width="<?php echo esc_attr( $card_width ); ?>"
-		 data-rows-visible="<?php echo esc_attr( $rows_visible ); ?>">
+		 data-rows-visible="<?php echo esc_attr( $rows_visible ); ?>"
+		 data-rows-visible-tablet="<?php echo esc_attr( $rows_visible_tablet ); ?>"
+		 data-rows-visible-mobile="<?php echo esc_attr( $rows_visible_mobile ); ?>">
 
 		<?php foreach ( $products as $index => $product ) :
 			$product_id = $product->get_id();

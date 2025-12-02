@@ -422,16 +422,19 @@
 
 @media (prefers-color-scheme: dark) {
 	.aura-kids-card {
-		background: #1a1a1a;
-		border-color: #444;
+		background: #fff !important;
+		border-color: #9A9A9A !important;
+		color: #333 !important;
 	}
 
 	.aura-kids-card .aura-product-title {
-		color: #fff !important;
+		color: #333 !important;
+		-webkit-text-fill-color: #333 !important;
 	}
 
 	.aura-kids-description {
-		color: #ccc !important;
+		color: #666 !important;
+		-webkit-text-fill-color: #666 !important;
 	}
 
 	.aura-kids-unit-price,
@@ -439,19 +442,21 @@
 	.aura-kids-footer .aura-total-price,
 	.aura-kids-total-label-free,
 	.aura-kids-free {
-		color: #fff !important;
+		color: #333 !important;
+		-webkit-text-fill-color: #333 !important;
 	}
 
 	.aura-kids-icon {
-		background-color: #2a2a2a;
-		border-color: #555;
+		background-color: #f5f5f5 !important;
+		border-color: #9A9A9A !important;
 	}
 
 	.aura-kids-card .aura-quantity-display {
-		color: #fff;
+		color: #333 !important;
+		-webkit-text-fill-color: #333 !important;
 	}
 
 	.aura-kids-footer {
-		border-color: #666;
+		border-color: #9A9A9A !important;
 	}
 }

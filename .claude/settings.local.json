@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(cat:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(for file in layout-checkbox.php layout-kids.php layout-moments.php layout-wine.php)",
+      "Bash(do echo \"Processing $file...\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

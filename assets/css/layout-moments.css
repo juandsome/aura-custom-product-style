@@ -374,50 +374,58 @@
 
 @media (prefers-color-scheme: dark) {
 	.aura-moments-card {
-		background: #1a1a1a;
-		border-color: #444;
+		background: #fff !important;
+		border-color: #9A9A9A !important;
+		color: #333 !important;
 	}
 
 	.aura-moments-card .aura-product-title {
-		color: #fff !important;
+		color: #333 !important;
+		-webkit-text-fill-color: #333 !important;
 	}
 
 	.aura-moments-description {
-		color: #ccc !important;
+		color: #666 !important;
+		-webkit-text-fill-color: #666 !important;
 	}
 
 	.aura-moments-checkbox-btn {
-		border-color: #666;
+		border-color: #333 !important;
+		background: transparent !important;
 	}
 
 	.aura-moments-checkbox-btn:hover {
-		background-color: #333;
-		border-color: #fff;
+		background-color: #f5f5f5 !important;
+		border-color: #000 !important;
 	}
 
 	.aura-moments-checkbox-btn[aria-checked="true"] {
-		background-color: #fff;
-		border-color: #fff;
+		background-color: #333 !important;
+		border-color: #333 !important;
 	}
 
 	.aura-moments-checkbox-btn[aria-checked="true"] .aura-moments-checkmark {
-		color: #000;
+		color: #fff !important;
+		-webkit-text-fill-color: #fff !important;
 	}
 
 	.aura-moments-checkmark {
-		color: #fff;
+		color: #333 !important;
+		-webkit-text-fill-color: #333 !important;
 	}
 
 	.aura-moments-add-text {
-		color: #fff;
+		color: #333 !important;
+		-webkit-text-fill-color: #333 !important;
 	}
 
 	.aura-moments-price {
-		color: #fff !important;
+		color: #333 !important;
+		-webkit-text-fill-color: #333 !important;
 	}
 
 	.aura-moments-icon {
-		background-color: #2a2a2a;
+		background-color: #f5f5f5 !important;
 	}
 
 	.aura-moments-footer {
