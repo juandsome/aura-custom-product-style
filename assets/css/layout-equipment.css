@@ -240,6 +240,101 @@
 }
 
 /* ========================================
+   CONFIRM RENT ROW (Checkbox)
+   ======================================== */
+
+.aura-equipment-confirm-row {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding-top: 15px;
+	margin-top: 15px;
+	border-top: 1px solid #000;
+}
+
+.aura-equipment-confirm-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* Checkbox Button (similar to moments layout) */
+.aura-equipment-confirm-btn {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border: 2px solid #333 !important;
+	border-radius: 3px;
+	background: transparent !important;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	outline: none !important;
+	padding: 0;
+	margin: 0;
+	box-shadow: none !important;
+}
+
+.aura-equipment-confirm-btn:hover {
+	background-color: #f5f5f5 !important;
+	border-color: #000 !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+.aura-equipment-confirm-btn:active {
+	transform: scale(0.95);
+	background-color: #f5f5f5 !important;
+	box-shadow: none !important;
+}
+
+.aura-equipment-confirm-btn:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+/* Checkmark (hidden by default, shown when checked) */
+.aura-equipment-checkmark {
+	font-size: 18px;
+	line-height: 1;
+	color: #333;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+/* Checked state */
+.aura-equipment-confirm-btn[aria-checked="true"] {
+	background-color: #333 !important;
+	border-color: #333 !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+.aura-equipment-confirm-btn[aria-checked="true"]:hover {
+	background-color: #333 !important;
+	border-color: #333 !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+.aura-equipment-confirm-btn[aria-checked="true"] .aura-equipment-checkmark {
+	opacity: 1;
+	color: #fff;
+}
+
+/* Confirm text */
+.aura-equipment-confirm-text {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	font-size: 1em;
+	line-height: 150%;
+	color: #333;
+	user-select: none;
+}
+
+/* ========================================
    LOADING STATE
    ======================================== */
 

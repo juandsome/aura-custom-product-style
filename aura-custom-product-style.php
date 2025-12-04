@@ -3,7 +3,7 @@
  * Plugin Name: Aura Custom Product Style
  * Plugin URI: https://collectionaura.com
  * Description: Elementor widgets to display WooCommerce products related to villas in cart with multiple layout options
- * Version: 1.6.8
+ * Version: 1.7.0
  * Author: Collection Aura
  * Author URI: https://collectionaura.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'AURA_CPS_VERSION', '1.6.8' );
+define( 'AURA_CPS_VERSION', '1.7.0' );
 define( 'AURA_CPS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AURA_CPS_URL', plugin_dir_url( __FILE__ ) );
 define( 'AURA_CPS_BASENAME', plugin_basename( __FILE__ ) );
@@ -76,11 +76,11 @@ class Aura_Custom_Product_Style {
 		add_action( 'wp_ajax_aura_cps_save_arrival_details', array( $this, 'ajax_save_arrival_details' ) );
 		add_action( 'wp_ajax_nopriv_aura_cps_save_arrival_details', array( $this, 'ajax_save_arrival_details' ) );
 
-		// Equipment rental AJAX hooks
-		add_action( 'wp_ajax_aura_cps_increase_equipment', array( $this, 'ajax_increase_equipment' ) );
-		add_action( 'wp_ajax_nopriv_aura_cps_increase_equipment', array( $this, 'ajax_increase_equipment' ) );
-		add_action( 'wp_ajax_aura_cps_decrease_equipment', array( $this, 'ajax_decrease_equipment' ) );
-		add_action( 'wp_ajax_nopriv_aura_cps_decrease_equipment', array( $this, 'ajax_decrease_equipment' ) );
+		// Equipment rental AJAX hooks (NEW - with confirm checkbox)
+		add_action( 'wp_ajax_aura_cps_add_equipment_rental', array( $this, 'ajax_add_equipment_rental' ) );
+		add_action( 'wp_ajax_nopriv_aura_cps_add_equipment_rental', array( $this, 'ajax_add_equipment_rental' ) );
+		add_action( 'wp_ajax_aura_cps_remove_equipment_rental', array( $this, 'ajax_remove_equipment_rental' ) );
+		add_action( 'wp_ajax_nopriv_aura_cps_remove_equipment_rental', array( $this, 'ajax_remove_equipment_rental' ) );
 		add_action( 'wp_ajax_aura_cps_update_equipment_dates', array( $this, 'ajax_update_equipment_dates' ) );
 		add_action( 'wp_ajax_nopriv_aura_cps_update_equipment_dates', array( $this, 'ajax_update_equipment_dates' ) );
 
@@ -421,7 +421,122 @@ class Aura_Custom_Product_Style {
 	}
 
 	/**
+	 * AJAX: Add equipment rental to cart (NEW - with confirm checkbox logic)
+	 * Adds specified quantity with rental dates
+	 */
+	public function ajax_add_equipment_rental() {
+		// Verify nonce
+		check_ajax_referer( 'aura_cps_nonce', 'nonce' );
+
+		// Check required parameters
+		if ( ! isset( $_POST['product_id'] ) || ! isset( $_POST['quantity'] ) || ! isset( $_POST['rental_start_date'] ) || ! isset( $_POST['rental_end_date'] ) ) {
+			error_log( 'AURA CPS: Missing required parameters in add_equipment_rental' );
+			wp_send_json_error( array(
+				'message' => esc_html__( 'Missing required parameters', 'aura-custom-product-style' ),
+			) );
+		}
+
+		$product_id        = intval( $_POST['product_id'] );
+		$quantity          = intval( $_POST['quantity'] );
+		$rental_start_date = sanitize_text_field( $_POST['rental_start_date'] );
+		$rental_end_date   = sanitize_text_field( $_POST['rental_end_date'] );
+
+		error_log( 'AURA CPS: Add rental - Product ID: ' . $product_id . ' | Quantity: ' . $quantity . ' | Dates: ' . $rental_start_date . ' to ' . $rental_end_date );
+
+		if ( $quantity <= 0 ) {
+			error_log( 'AURA CPS: Invalid quantity: ' . $quantity );
+			wp_send_json_error( array(
+				'message' => esc_html__( 'Invalid quantity', 'aura-custom-product-style' ),
+			) );
+		}
+
+		// Check if item already exists in cart for this product
+		$cart_item_key = null;
+		foreach ( WC()->cart->get_cart() as $item_key => $cart_item ) {
+			if ( $cart_item['product_id'] === $product_id ) {
+				$cart_item_key = $item_key;
+				error_log( 'AURA CPS: Found existing cart item, will update it' );
+				break;
+			}
+		}
+
+		if ( $cart_item_key ) {
+			// Update existing item
+			WC()->cart->set_quantity( $cart_item_key, $quantity );
+			WC()->cart->cart_contents[ $cart_item_key ]['_equipment_rental_start'] = $rental_start_date;
+			WC()->cart->cart_contents[ $cart_item_key ]['_equipment_rental_end'] = $rental_end_date;
+			WC()->cart->set_session();
+			error_log( 'AURA CPS: Updated existing cart item' );
+		} else {
+			// Add new item
+			$cart_item_data = array(
+				'_equipment_rental_start' => $rental_start_date,
+				'_equipment_rental_end'   => $rental_end_date,
+			);
+
+			WC()->cart->add_to_cart(
+				$product_id,
+				$quantity,
+				0,
+				array(),
+				$cart_item_data
+			);
+			error_log( 'AURA CPS: Added new cart item' );
+		}
+
+		error_log( 'AURA CPS: Add rental successful' );
+		wp_send_json_success( array(
+			'message' => esc_html__( 'Added to cart', 'aura-custom-product-style' ),
+		) );
+	}
+
+	/**
+	 * AJAX: Remove equipment rental from cart (NEW - with confirm checkbox logic)
+	 * Removes the product completely from cart
+	 */
+	public function ajax_remove_equipment_rental() {
+		// Verify nonce
+		check_ajax_referer( 'aura_cps_nonce', 'nonce' );
+
+		// Check required parameters
+		if ( ! isset( $_POST['product_id'] ) ) {
+			error_log( 'AURA CPS: Missing product_id in remove_equipment_rental' );
+			wp_send_json_error( array(
+				'message' => esc_html__( 'Missing product ID', 'aura-custom-product-style' ),
+			) );
+		}
+
+		$product_id = intval( $_POST['product_id'] );
+		error_log( 'AURA CPS: Remove rental - Product ID: ' . $product_id );
+
+		// Find and remove cart item
+		$cart_item_key = null;
+		foreach ( WC()->cart->get_cart() as $item_key => $cart_item ) {
+			if ( $cart_item['product_id'] === $product_id ) {
+				$cart_item_key = $item_key;
+				break;
+			}
+		}
+
+		if ( ! $cart_item_key ) {
+			error_log( 'AURA CPS: Product ID ' . $product_id . ' not found in cart for removal' );
+			wp_send_json_error( array(
+				'message' => esc_html__( 'Product not found in cart', 'aura-custom-product-style' ),
+			) );
+		}
+
+		// Remove from cart
+		WC()->cart->remove_cart_item( $cart_item_key );
+		error_log( 'AURA CPS: Removed from cart successfully' );
+
+		wp_send_json_success( array(
+			'message' => esc_html__( 'Removed from cart', 'aura-custom-product-style' ),
+		) );
+	}
+
+	/**
 	 * AJAX: Increase equipment quantity (adds or updates cart with rental dates)
+	 * DEPRECATED - keeping for backwards compatibility
 	 */
 	public function ajax_increase_equipment() {
 		// Verify nonce

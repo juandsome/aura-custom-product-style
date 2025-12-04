@@ -50,12 +50,12 @@
 				return;
 			}
 
-			// Flatpickr configuration
+			// Flatpickr configuration with European date format (DD/MM/YYYY)
 			const config = {
 				mode: 'range',
-				dateFormat: 'Y-m-d',
+				dateFormat: 'd/m/Y', // Internal format: DD/MM/YYYY
 				altInput: true,
-				altFormat: 'F j, Y',
+				altFormat: 'd/m/Y', // Display format: DD/MM/YYYY
 				minDate: 'today',
 				locale: {
 					rangeSeparator: ' to '
@@ -164,37 +164,29 @@
 
 	/**
 	 * Initialize quantity control handlers
+	 * NEW LOGIC: +/- buttons only modify quantity locally (no AJAX)
+	 * AJAX is triggered ONLY when user clicks the confirm checkbox
 	 */
 	function initQuantityControls() {
-		// Plus button
+		// Plus button - increases quantity locally
 		$(document).on('click', '.aura-equipment-card .aura-btn-plus', function() {
 			console.log('Click en botón + detectado');
 
 			const btn = $(this);
 			const card = btn.closest('.aura-equipment-card');
 			const productId = btn.attr('data-product-id');
-			const dateInput = card.find('.aura-equipment-date-range');
-			const dateStr = dateInput.val();
 			const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+			const newQuantity = currentQuantity + 1;
 
-			console.log('Producto ID:', productId, '| Cantidad actual:', currentQuantity);
+			console.log('Producto ID:', productId, '| Cantidad actual:', currentQuantity, '→ Nueva:', newQuantity);
 
-			// Get dates if they exist, otherwise use empty strings (will be set later)
-			let startDate = '';
-			let endDate = '';
-			if (dateStr && dateStr.includes(' to ')) {
-				const dates = dateStr.split(' to ');
-				startDate = dates[0].trim();
-				endDate = dates[1].trim();
-				console.log('Fechas encontradas - Inicio:', startDate, '| Fin:', endDate);
-			} else {
-				console.log('No hay fechas seleccionadas');
-			}
-
-			increaseQuantity(productId, startDate, endDate, card);
+			// Update display locally
+			updateQuantityDisplay(productId, newQuantity);
+			updateTotal(card, productId);
+			updateDateInputState(card, productId);
 		});
 
-		// Minus button
+		// Minus button - decreases quantity locally
 		$(document).on('click', '.aura-equipment-card .aura-btn-minus', function() {
 			console.log('Click en botón - detectado');
 
@@ -202,110 +194,157 @@
 			const card = btn.closest('.aura-equipment-card');
 			const productId = btn.attr('data-product-id');
 			const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+			const newQuantity = Math.max(0, currentQuantity - 1);
 
-			console.log('Producto ID:', productId, '| Cantidad actual antes de disminuir:', currentQuantity);
+			console.log('Producto ID:', productId, '| Cantidad actual:', currentQuantity, '→ Nueva:', newQuantity);
 
-			decreaseQuantity(productId, card);
+			// Update display locally
+			updateQuantityDisplay(productId, newQuantity);
+			updateTotal(card, productId);
+			updateDateInputState(card, productId);
 		});
-	}
 
-	/**
-	 * Increase quantity and add/update cart
-	 */
-	function increaseQuantity(productId, startDate, endDate, card) {
-		// Get current quantity before AJAX call
-		const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+		// Confirm checkbox - triggers AJAX to add/remove from cart
+		$(document).on('click', '.aura-equipment-confirm-btn', function() {
+			console.log('Click en botón de confirmación detectado');
 
-		card.addClass('loading');
+			const btn = $(this);
+			const card = btn.closest('.aura-equipment-card');
+			const productId = btn.attr('data-product-id');
+			const isCurrentlyChecked = btn.attr('aria-checked') === 'true';
 
-		$.ajax({
-			url: auraCPS.ajaxUrl,
-			type: 'POST',
-			data: {
-				action: 'aura_cps_increase_equipment',
-				nonce: auraCPS.nonce,
-				product_id: productId,
-				rental_start_date: startDate,
-				rental_end_date: endDate
-			},
-			success: function(response) {
-				card.removeClass('loading');
+			console.log('Producto ID:', productId, '| Estado actual:', isCurrentlyChecked ? 'checked' : 'unchecked');
 
-				if (response.success) {
-					const newQuantity = response.data.quantity;
-					console.log('AJAX exitoso - Nueva cantidad:', newQuantity, '| Cantidad anterior:', currentQuantity);
-
-					updateQuantityDisplay(productId, newQuantity);
-					updateTotal(card, productId);
-					updateDateInputState(card, productId);
-
-					// Log when going from 0 to 1
-					if (newQuantity === 1 && currentQuantity === 0) {
-						console.log('✓ Agregado 1 producto, producto total:', newQuantity);
-						console.log('✓ El input de fechas debería estar activado ahora');
-					}
-				} else {
-					console.error('AJAX falló - response.success es false');
-					console.error('Response completo:', response);
-				}
-			},
-			error: function(xhr, status, error) {
-				card.removeClass('loading');
-				console.error('Error AJAX (increase):', {
-					status: status,
-					error: error,
-					response: xhr.responseText
-				});
+			if (isCurrentlyChecked) {
+				// User is unchecking - remove from cart
+				removeFromCart(productId, card, btn);
+			} else {
+				// User is checking - validate and add to cart
+				validateAndAddToCart(productId, card, btn);
 			}
 		});
 	}
 
 	/**
-	 * Decrease quantity or remove from cart
+	 * Validate and add to cart (when user checks the confirm button)
+	 * Validates: quantity > 0 AND dates are selected
 	 */
-	function decreaseQuantity(productId, card) {
-		// Get current quantity before AJAX call to detect 1->0 transition
-		const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+	function validateAndAddToCart(productId, card, confirmBtn) {
+		console.log('═══════════════════════════════════════');
+		console.log('validateAndAddToCart - Producto ID:', productId);
+
+		const quantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+		const dateInput = card.find('.aura-equipment-date-range');
+		const dateStr = dateInput.val();
+
+		console.log('Cantidad:', quantity, '| Fechas:', dateStr);
+
+		// Validation 1: Check quantity > 0
+		if (quantity === 0) {
+			console.error('❌ Validación fallida: cantidad = 0');
+			showNotification('Please add some equipment to rent', 'error');
+			return;
+		}
+
+		// Validation 2: Check dates are selected
+		if (!dateStr || !dateStr.includes(' to ')) {
+			console.error('❌ Validación fallida: fechas no seleccionadas');
+			showNotification('Please select rental dates', 'error');
+			return;
+		}
+
+		// Parse dates
+		const dates = dateStr.split(' to ');
+		const startDate = dates[0].trim();
+		const endDate = dates[1].trim();
+
+		console.log('✓ Validación exitosa - Agregando al carrito...');
+		console.log('  Cantidad:', quantity, '| Inicio:', startDate, '| Fin:', endDate);
 
 		card.addClass('loading');
+		confirmBtn.prop('disabled', true);
 
+		// Add to cart via AJAX
 		$.ajax({
 			url: auraCPS.ajaxUrl,
 			type: 'POST',
 			data: {
-				action: 'aura_cps_decrease_equipment',
+				action: 'aura_cps_add_equipment_rental',
+				nonce: auraCPS.nonce,
+				product_id: productId,
+				quantity: quantity,
+				rental_start_date: startDate,
+				rental_end_date: endDate
+			},
+			success: function(response) {
+				card.removeClass('loading');
+				confirmBtn.prop('disabled', false);
+
+				if (response.success) {
+					console.log('✓ Producto agregado al carrito exitosamente');
+					// Mark as checked
+					confirmBtn.attr('aria-checked', 'true');
+					console.log('═══════════════════════════════════════');
+				} else {
+					console.error('❌ Error al agregar al carrito:', response);
+					showNotification('Error adding to cart', 'error');
+					console.log('═══════════════════════════════════════');
+				}
+			},
+			error: function(xhr, status, error) {
+				card.removeClass('loading');
+				confirmBtn.prop('disabled', false);
+				console.error('❌ Error AJAX:', { status, error, response: xhr.responseText });
+				showNotification('Error adding to cart', 'error');
+				console.log('═══════════════════════════════════════');
+			}
+		});
+	}
+
+	/**
+	 * Remove from cart (when user unchecks the confirm button)
+	 */
+	function removeFromCart(productId, card, confirmBtn) {
+		console.log('═══════════════════════════════════════');
+		console.log('removeFromCart - Producto ID:', productId);
+
+		card.addClass('loading');
+		confirmBtn.prop('disabled', true);
+
+		// Remove from cart via AJAX
+		$.ajax({
+			url: auraCPS.ajaxUrl,
+			type: 'POST',
+			data: {
+				action: 'aura_cps_remove_equipment_rental',
 				nonce: auraCPS.nonce,
 				product_id: productId
 			},
 			success: function(response) {
 				card.removeClass('loading');
+				confirmBtn.prop('disabled', false);
 
 				if (response.success) {
-					const newQuantity = response.data.quantity;
-					console.log('AJAX exitoso (decrease) - Nueva cantidad:', newQuantity, '| Cantidad anterior:', currentQuantity);
-
-					updateQuantityDisplay(productId, newQuantity);
+					console.log('✓ Producto eliminado del carrito exitosamente');
+					// Mark as unchecked
+					confirmBtn.attr('aria-checked', 'false');
+					// Reset quantity to 0
+					updateQuantityDisplay(productId, 0);
 					updateTotal(card, productId);
 					updateDateInputState(card, productId);
-
-					// Log when going from 1 to 0
-					if (newQuantity === 0 && currentQuantity === 1) {
-						console.log('✓ Producto reducido a 0, desactivando calendario para producto ID:', productId);
-						const dateInput = card.find('.aura-equipment-date-range');
-						console.log('✓ Input deshabilitado, estado disabled:', dateInput.prop('disabled'));
-					}
+					console.log('═══════════════════════════════════════');
 				} else {
-					console.error('AJAX falló (decrease) - response.success es false');
-					console.error('Response completo:', response);
+					console.error('❌ Error al eliminar del carrito:', response);
+					showNotification('Error removing from cart', 'error');
+					console.log('═══════════════════════════════════════');
 				}
 			},
 			error: function(xhr, status, error) {
 				card.removeClass('loading');
-				console.error('Error AJAX (decrease):', {
-					status: status,
-					error: error,
-					response: xhr.responseText
-				});
+				confirmBtn.prop('disabled', false);
+				console.error('❌ Error AJAX:', { status, error, response: xhr.responseText });
+				showNotification('Error removing from cart', 'error');
+				console.log('═══════════════════════════════════════');
 			}
 		});
 	}

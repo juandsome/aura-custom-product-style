@@ -174,6 +174,22 @@ $end_date = $booking_dates['end'] ?? '';
 					</span>
 				</div>
 
+				<!-- Row 5: Confirm Rent Checkbox -->
+				<div class="aura-equipment-confirm-row">
+					<div class="aura-equipment-confirm-wrapper">
+						<button type="button"
+								class="aura-equipment-confirm-btn"
+								data-product-id="<?php echo esc_attr( $product_id ); ?>"
+								aria-checked="<?php echo $initial_quantity > 0 ? 'true' : 'false'; ?>"
+								aria-label="<?php esc_attr_e( 'Confirm rental', 'aura-custom-product-style' ); ?>">
+							<span class="aura-equipment-checkmark">✓</span>
+						</button>
+						<span class="aura-equipment-confirm-text">
+							<?php esc_html_e( 'Confirm Rent', 'aura-custom-product-style' ); ?>
+						</span>
+					</div>
+				</div>
+
 			</div><!-- .aura-product-info -->
 
 		</div><!-- .aura-equipment-card -->
