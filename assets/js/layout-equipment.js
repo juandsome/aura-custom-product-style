@@ -168,7 +168,6 @@
 			// If quantity > 0, check if dates are selected
 			if (currentQuantity > 0) {
 				if (!dateStr || !dateStr.includes(' to ')) {
-					showNotification(card, 'Please select rental dates', 'error');
 					// Open the date picker to help user
 					const flatpickrInstance = dateInput.data('flatpickr');
 					if (flatpickrInstance) {
@@ -226,9 +225,6 @@
 					updateQuantityDisplay(productId, newQuantity);
 					updateTotal(card, productId);
 					updateDateInputState(card, productId);
-
-					// Show success notification
-					showNotification(card, 'Updated', 'success');
 				} else {
 					const message = response.data && response.data.message ? response.data.message : 'Error updating cart';
 					showNotification(card, message, 'error');
@@ -263,10 +259,6 @@
 					updateQuantityDisplay(productId, newQuantity);
 					updateTotal(card, productId);
 					updateDateInputState(card, productId);
-
-					// Show success notification
-					const message = newQuantity === 0 ? 'Removed from cart' : 'Updated';
-					showNotification(card, message, 'success');
 				} else {
 					const message = response.data && response.data.message ? response.data.message : 'Error updating cart';
 					showNotification(card, message, 'error');
@@ -296,7 +288,6 @@
 			success: function(response) {
 				if (response.success) {
 					updateTotal(card, productId);
-					showNotification(card, 'Dates updated', 'success');
 				}
 			}
 		});
