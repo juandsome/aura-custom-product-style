@@ -145,12 +145,17 @@ $end_date = $booking_dates['end'] ?? '';
 					<label class="aura-equipment-date-label">
 						<?php esc_html_e( 'For how many days?', 'aura-custom-product-style' ); ?>
 					</label>
-					<input type="text"
-						   class="aura-equipment-date-range"
-						   data-product-id="<?php echo esc_attr( $product_id ); ?>"
-						   placeholder="<?php esc_attr_e( 'Select dates', 'aura-custom-product-style' ); ?>"
-						   value="<?php echo esc_attr( $rental_start && $rental_end ? $rental_start . ' to ' . $rental_end : '' ); ?>"
-						   readonly />
+					<div class="aura-equipment-date-input-wrapper">
+						<img src="https://collectionaura.com/wp-content/uploads/2025/12/calendar.svg"
+							 alt="Calendar"
+							 class="aura-equipment-calendar-icon" />
+						<input type="text"
+							   class="aura-equipment-date-range"
+							   data-product-id="<?php echo esc_attr( $product_id ); ?>"
+							   placeholder="<?php esc_attr_e( 'Select days', 'aura-custom-product-style' ); ?>"
+							   value="<?php echo esc_attr( $rental_start && $rental_end ? $rental_start . ' to ' . $rental_end : '' ); ?>"
+							   readonly />
+					</div>
 				</div>
 
 				<!-- Row 3: Price per day -->
