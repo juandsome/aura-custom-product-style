@@ -3,7 +3,7 @@
  * Plugin Name: Aura Custom Product Style
  * Plugin URI: https://collectionaura.com
  * Description: Elementor widgets to display WooCommerce products related to villas in cart with multiple layout options
- * Version: 1.6.7
+ * Version: 1.6.8
  * Author: Collection Aura
  * Author URI: https://collectionaura.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'AURA_CPS_VERSION', '1.6.7' );
+define( 'AURA_CPS_VERSION', '1.6.8' );
 define( 'AURA_CPS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AURA_CPS_URL', plugin_dir_url( __FILE__ ) );
 define( 'AURA_CPS_BASENAME', plugin_basename( __FILE__ ) );
@@ -87,6 +87,10 @@ class Aura_Custom_Product_Style {
 		// WooCommerce hooks
 		add_action( 'woocommerce_checkout_create_order', array( $this, 'add_arrival_details_to_order' ), 10, 2 );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'display_arrival_details_in_admin' ), 10, 1 );
+
+		// Equipment rental metadata display hooks
+		add_filter( 'woocommerce_get_item_data', array( $this, 'display_equipment_rental_metadata_in_cart' ), 10, 2 );
+		add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'save_equipment_rental_metadata_to_order' ), 10, 4 );
 	}
 
 	/**
@@ -598,6 +602,70 @@ class Aura_Custom_Product_Style {
 		WC()->cart->set_session();
 
 		wp_send_json_success();
+	}
+
+	/**
+	 * Display equipment rental dates in cart and checkout
+	 *
+	 * @param array $item_data Existing item data
+	 * @param array $cart_item Cart item data
+	 * @return array Modified item data
+	 */
+	public function display_equipment_rental_metadata_in_cart( $item_data, $cart_item ) {
+		// Check if this item has rental dates
+		if ( isset( $cart_item['_equipment_rental_start'] ) && isset( $cart_item['_equipment_rental_end'] ) ) {
+			$start_date = $cart_item['_equipment_rental_start'];
+			$end_date = $cart_item['_equipment_rental_end'];
+
+			// Calculate rental days
+			$start = new DateTime( $start_date );
+			$end = new DateTime( $end_date );
+			$diff = $start->diff( $end );
+			$days = $diff->days + 1; // Include both start and end dates
+
+			$item_data[] = array(
+				'key'   => __( 'Rental Period', 'aura-custom-product-style' ),
+				'value' => sprintf(
+					__( '%s to %s (%d days)', 'aura-custom-product-style' ),
+					$start_date,
+					$end_date,
+					$days
+				),
+			);
+
+			error_log( 'AURA CPS: Displaying rental metadata in cart - Start: ' . $start_date . ' | End: ' . $end_date . ' | Days: ' . $days );
+		}
+
+		return $item_data;
+	}
+
+	/**
+	 * Save equipment rental dates to order items
+	 *
+	 * @param WC_Order_Item_Product $item Order item
+	 * @param string $cart_item_key Cart item key
+	 * @param array $values Cart item values
+	 * @param WC_Order $order Order object
+	 */
+	public function save_equipment_rental_metadata_to_order( $item, $cart_item_key, $values, $order ) {
+		// Check if this item has rental dates
+		if ( isset( $values['_equipment_rental_start'] ) && isset( $values['_equipment_rental_end'] ) ) {
+			$start_date = $values['_equipment_rental_start'];
+			$end_date = $values['_equipment_rental_end'];
+
+			// Calculate rental days
+			$start = new DateTime( $start_date );
+			$end = new DateTime( $end_date );
+			$diff = $start->diff( $end );
+			$days = $diff->days + 1; // Include both start and end dates
+
+			// Save as order item meta
+			$item->add_meta_data( __( 'Rental Start', 'aura-custom-product-style' ), $start_date, true );
+			$item->add_meta_data( __( 'Rental End', 'aura-custom-product-style' ), $end_date, true );
+			$item->add_meta_data( __( 'Rental Days', 'aura-custom-product-style' ), $days, true );
+
+			error_log( 'AURA CPS: Saving rental metadata to order item - Start: ' . $start_date . ' | End: ' . $end_date . ' | Days: ' . $days );
+		}
 	}
 }
 
