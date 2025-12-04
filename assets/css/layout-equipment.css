@@ -179,6 +179,20 @@
 	color: #999;
 }
 
+.aura-equipment-date-range:disabled,
+.aura-equipment-date-range.disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	background: rgba(0, 0, 0, 0.02);
+	color: #999;
+}
+
+.aura-equipment-date-range:disabled:hover,
+.aura-equipment-date-range.disabled:hover {
+	background: rgba(0, 0, 0, 0.02);
+	border-color: #9A9A9A;
+}
+
 .aura-equipment-unit-price {
 	flex: 0 0 auto;
 	font-family: 'Open Sans', sans-serif !important;

@@ -22,6 +22,7 @@
 	function initEquipmentLayout() {
 		initDateRangePickers();
 		initQuantityControls();
+		initDateInputStates();
 	}
 
 	/**
@@ -70,9 +71,43 @@
 				config.maxDate = endDate;
 			}
 
-			// Initialize Flatpickr
-			flatpickr(dateInput[0], config);
+			// Initialize Flatpickr and store instance
+			const flatpickrInstance = flatpickr(dateInput[0], config);
+			dateInput.data('flatpickr', flatpickrInstance);
 		});
+	}
+
+	/**
+	 * Initialize date input states based on quantity
+	 */
+	function initDateInputStates() {
+		$('.aura-equipment-card').each(function() {
+			const card = $(this);
+			const productId = card.attr('data-product-id');
+			updateDateInputState(card, productId);
+		});
+	}
+
+	/**
+	 * Update date input state (enabled/disabled) based on quantity
+	 *
+	 * Logic: Date input should only be active when quantity > 0
+	 * When quantity is 0, disable the date input
+	 * When quantity becomes > 0, enable the date input
+	 */
+	function updateDateInputState(card, productId) {
+		const quantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+		const dateInput = card.find('.aura-equipment-date-range');
+		const hasCartDates = dateInput.val() && dateInput.val().includes(' to ');
+
+		// Enable date input only when quantity > 0 OR when there are already dates selected
+		if (quantity > 0 || hasCartDates) {
+			dateInput.prop('disabled', false);
+			dateInput.removeClass('disabled');
+		} else {
+			dateInput.prop('disabled', true);
+			dateInput.addClass('disabled');
+		}
 	}
 
 	/**
@@ -86,15 +121,18 @@
 		const startDate = selectedDates[0];
 		const endDate = selectedDates[1];
 
-		// Calculate days
+		// Calculate days (including both start and end date)
 		const diffTime = Math.abs(endDate - startDate);
-		const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+		const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
 
 		// Update card data attribute
 		card.attr('data-rental-days', diffDays);
 
 		// Recalculate total
 		updateTotal(card, productId);
+
+		// Update date input state (keep enabled now that dates are selected)
+		updateDateInputState(card, productId);
 
 		// Get current quantity
 		const quantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
@@ -116,6 +154,26 @@
 			const productId = btn.attr('data-product-id');
 			const dateInput = card.find('.aura-equipment-date-range');
 			const dateStr = dateInput.val();
+			const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+
+			// If quantity is 0 and no dates selected, enable input and prompt user
+			if (currentQuantity === 0 && (!dateStr || !dateStr.includes(' to '))) {
+				// Temporarily enable the input
+				dateInput.prop('disabled', false);
+				dateInput.removeClass('disabled');
+
+				// Show notification
+				showNotification(card, 'Please select rental dates first', 'error');
+
+				// Open the date picker
+				const flatpickrInstance = dateInput.data('flatpickr');
+				if (flatpickrInstance) {
+					setTimeout(function() {
+						flatpickrInstance.open();
+					}, 100);
+				}
+				return;
+			}
 
 			// Check if dates are selected
 			if (!dateStr || !dateStr.includes(' to ')) {
@@ -163,6 +221,7 @@
 					const newQuantity = response.data.quantity;
 					updateQuantityDisplay(productId, newQuantity);
 					updateTotal(card, productId);
+					updateDateInputState(card, productId);
 
 					// Show success notification
 					showNotification(card, 'Updated', 'success');
@@ -199,6 +258,7 @@
 					const newQuantity = response.data.quantity;
 					updateQuantityDisplay(productId, newQuantity);
 					updateTotal(card, productId);
+					updateDateInputState(card, productId);
 
 					// Show success notification
 					const message = newQuantity === 0 ? 'Removed from cart' : 'Updated';
