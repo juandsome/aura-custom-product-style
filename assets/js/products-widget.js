@@ -46,16 +46,24 @@
 		bindEvents: function() {
 			const self = this;
 
-			// Plus button click
+			// Plus button click (EXCLUDE equipment cards - they have their own handler)
 			$(document).off('click.auraCps', '.aura-btn-plus')
 					   .on('click.auraCps', '.aura-btn-plus', function(e) {
+				// Skip if this is an equipment card - it has its own dedicated handler
+				if ($(this).closest('.aura-equipment-card').length > 0) {
+					return; // Let the equipment handler deal with it
+				}
 				e.preventDefault();
 				self.handlePlusClick($(this));
 			});
 
-			// Minus button click
+			// Minus button click (EXCLUDE equipment cards - they have their own handler)
 			$(document).off('click.auraCps', '.aura-btn-minus')
 					   .on('click.auraCps', '.aura-btn-minus', function(e) {
+				// Skip if this is an equipment card - it has its own dedicated handler
+				if ($(this).closest('.aura-equipment-card').length > 0) {
+					return; // Let the equipment handler deal with it
+				}
 				e.preventDefault();
 				self.handleMinusClick($(this));
 			});
