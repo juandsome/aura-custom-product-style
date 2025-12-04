@@ -99,7 +99,6 @@
 		const quantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
 		const dateInput = card.find('.aura-equipment-date-range');
 		const minusBtn = card.find('.aura-btn-minus[data-product-id="' + productId + '"]');
-		const hasCartDates = dateInput.val() && dateInput.val().includes(' to ');
 
 		// Enable/disable minus button based on quantity
 		if (quantity === 0) {
@@ -110,8 +109,8 @@
 			minusBtn.removeClass('disabled');
 		}
 
-		// Enable date input only when quantity > 0 OR when there are already dates selected
-		if (quantity > 0 || hasCartDates) {
+		// Enable date input only when quantity > 0
+		if (quantity > 0) {
 			dateInput.prop('disabled', false);
 			dateInput.removeClass('disabled');
 		} else {
@@ -166,34 +165,29 @@
 			const dateStr = dateInput.val();
 			const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
 
-			// If quantity is 0 and no dates selected, enable input and prompt user
-			if (currentQuantity === 0 && (!dateStr || !dateStr.includes(' to '))) {
-				// Temporarily enable the input
-				dateInput.prop('disabled', false);
-				dateInput.removeClass('disabled');
-
-				// Show notification
-				showNotification(card, 'Please select rental dates first', 'error');
-
-				// Open the date picker
-				const flatpickrInstance = dateInput.data('flatpickr');
-				if (flatpickrInstance) {
-					setTimeout(function() {
-						flatpickrInstance.open();
-					}, 100);
+			// If quantity > 0, check if dates are selected
+			if (currentQuantity > 0) {
+				if (!dateStr || !dateStr.includes(' to ')) {
+					showNotification(card, 'Please select rental dates', 'error');
+					// Open the date picker to help user
+					const flatpickrInstance = dateInput.data('flatpickr');
+					if (flatpickrInstance) {
+						setTimeout(function() {
+							flatpickrInstance.open();
+						}, 100);
+					}
+					return;
 				}
-				return;
 			}
 
-			// Check if dates are selected
-			if (!dateStr || !dateStr.includes(' to ')) {
-				showNotification(card, 'Please select rental dates first', 'error');
-				return;
+			// Get dates if they exist, otherwise use empty strings (will be set later)
+			let startDate = '';
+			let endDate = '';
+			if (dateStr && dateStr.includes(' to ')) {
+				const dates = dateStr.split(' to ');
+				startDate = dates[0].trim();
+				endDate = dates[1].trim();
 			}
-
-			const dates = dateStr.split(' to ');
-			const startDate = dates[0].trim();
-			const endDate = dates[1].trim();
 
 			increaseQuantity(productId, startDate, endDate, card);
 		});

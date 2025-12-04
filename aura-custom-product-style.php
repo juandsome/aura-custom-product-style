@@ -3,7 +3,7 @@
  * Plugin Name: Aura Custom Product Style
  * Plugin URI: https://collectionaura.com
  * Description: Elementor widgets to display WooCommerce products related to villas in cart with multiple layout options
- * Version: 1.5.9
+ * Version: 1.6.0
  * Author: Collection Aura
  * Author URI: https://collectionaura.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'AURA_CPS_VERSION', '1.5.9' );
+define( 'AURA_CPS_VERSION', '1.6.0' );
 define( 'AURA_CPS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AURA_CPS_URL', plugin_dir_url( __FILE__ ) );
 define( 'AURA_CPS_BASENAME', plugin_basename( __FILE__ ) );
@@ -424,29 +424,38 @@ class Aura_Custom_Product_Style {
 		check_ajax_referer( 'aura_cps_nonce', 'nonce' );
 
 		// Check required parameters
-		if ( ! isset( $_POST['product_id'] ) || ! isset( $_POST['rental_start_date'] ) || ! isset( $_POST['rental_end_date'] ) ) {
+		if ( ! isset( $_POST['product_id'] ) ) {
 			wp_send_json_error( array(
-				'message' => esc_html__( 'Missing required parameters', 'aura-custom-product-style' ),
+				'message' => esc_html__( 'Missing product ID', 'aura-custom-product-style' ),
 			) );
 		}
 
 		$product_id        = intval( $_POST['product_id'] );
-		$rental_start_date = sanitize_text_field( $_POST['rental_start_date'] );
-		$rental_end_date   = sanitize_text_field( $_POST['rental_end_date'] );
+		$rental_start_date = isset( $_POST['rental_start_date'] ) ? sanitize_text_field( $_POST['rental_start_date'] ) : '';
+		$rental_end_date   = isset( $_POST['rental_end_date'] ) ? sanitize_text_field( $_POST['rental_end_date'] ) : '';
 
-		// Find existing cart item with these dates
+		// Find existing cart item
 		$cart_item_key = null;
 		$current_quantity = 0;
 
 		foreach ( WC()->cart->get_cart() as $item_key => $cart_item ) {
-			if ( $cart_item['product_id'] === $product_id &&
-				 isset( $cart_item['_equipment_rental_start'] ) &&
-				 $cart_item['_equipment_rental_start'] === $rental_start_date &&
-				 isset( $cart_item['_equipment_rental_end'] ) &&
-				 $cart_item['_equipment_rental_end'] === $rental_end_date ) {
-				$cart_item_key = $item_key;
-				$current_quantity = $cart_item['quantity'];
-				break;
+			if ( $cart_item['product_id'] === $product_id ) {
+				// If we have dates, match them exactly
+				if ( ! empty( $rental_start_date ) && ! empty( $rental_end_date ) ) {
+					if ( isset( $cart_item['_equipment_rental_start'] ) &&
+						 $cart_item['_equipment_rental_start'] === $rental_start_date &&
+						 isset( $cart_item['_equipment_rental_end'] ) &&
+						 $cart_item['_equipment_rental_end'] === $rental_end_date ) {
+						$cart_item_key = $item_key;
+						$current_quantity = $cart_item['quantity'];
+						break;
+					}
+				} else {
+					// No dates provided, find any item for this product
+					$cart_item_key = $item_key;
+					$current_quantity = $cart_item['quantity'];
+					break;
+				}
 			}
 		}
 
@@ -456,16 +465,21 @@ class Aura_Custom_Product_Style {
 			// Update existing cart item
 			WC()->cart->set_quantity( $cart_item_key, $new_quantity );
 		} else {
-			// Add new cart item with rental metadata
+			// Add new cart item with rental metadata (if dates provided)
+			$cart_item_data = array();
+			if ( ! empty( $rental_start_date ) && ! empty( $rental_end_date ) ) {
+				$cart_item_data = array(
+					'_equipment_rental_start' => $rental_start_date,
+					'_equipment_rental_end'   => $rental_end_date,
+				);
+			}
+
 			WC()->cart->add_to_cart(
 				$product_id,
 				1,
 				0,
 				array(),
-				array(
-					'_equipment_rental_start' => $rental_start_date,
-					'_equipment_rental_end'   => $rental_end_date,
-				)
+				$cart_item_data
 			);
 		}
 
@@ -547,7 +561,7 @@ class Aura_Custom_Product_Style {
 		$cart_item_key = null;
 
 		foreach ( WC()->cart->get_cart() as $item_key => $cart_item ) {
-			if ( $cart_item['product_id'] === $product_id && isset( $cart_item['_equipment_rental_start'] ) ) {
+			if ( $cart_item['product_id'] === $product_id ) {
 				$cart_item_key = $item_key;
 				break;
 			}
