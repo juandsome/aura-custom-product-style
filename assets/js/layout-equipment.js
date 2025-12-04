@@ -169,37 +169,47 @@
 	 * AJAX is triggered ONLY when user clicks the confirm checkbox
 	 */
 	function initQuantityControls() {
-		// Plus button - increases quantity locally
+		// Plus button - increases quantity locally (NO AJAX, NO LOADING)
 		$(document).on('click', '.aura-equipment-card .aura-btn-plus', function() {
-			console.log('Click en botón + detectado');
-
 			const btn = $(this);
 			const card = btn.closest('.aura-equipment-card');
+
+			// Don't allow changes if card is locked (checkbox is checked)
+			if (card.hasClass('locked')) {
+				console.log('⚠️ Tarjeta bloqueada, no se puede modificar cantidad');
+				return;
+			}
+
 			const productId = btn.attr('data-product-id');
 			const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
 			const newQuantity = currentQuantity + 1;
 
-			console.log('Producto ID:', productId, '| Cantidad actual:', currentQuantity, '→ Nueva:', newQuantity);
+			console.log('➕ Cantidad:', currentQuantity, '→', newQuantity);
 
-			// Update display locally
+			// Update display locally (NO AJAX)
 			updateQuantityDisplay(productId, newQuantity);
 			updateTotal(card, productId);
 			updateDateInputState(card, productId);
 		});
 
-		// Minus button - decreases quantity locally
+		// Minus button - decreases quantity locally (NO AJAX, NO LOADING)
 		$(document).on('click', '.aura-equipment-card .aura-btn-minus', function() {
-			console.log('Click en botón - detectado');
-
 			const btn = $(this);
 			const card = btn.closest('.aura-equipment-card');
+
+			// Don't allow changes if card is locked (checkbox is checked)
+			if (card.hasClass('locked')) {
+				console.log('⚠️ Tarjeta bloqueada, no se puede modificar cantidad');
+				return;
+			}
+
 			const productId = btn.attr('data-product-id');
 			const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
 			const newQuantity = Math.max(0, currentQuantity - 1);
 
-			console.log('Producto ID:', productId, '| Cantidad actual:', currentQuantity, '→ Nueva:', newQuantity);
+			console.log('➖ Cantidad:', currentQuantity, '→', newQuantity);
 
-			// Update display locally
+			// Update display locally (NO AJAX)
 			updateQuantityDisplay(productId, newQuantity);
 			updateTotal(card, productId);
 			updateDateInputState(card, productId);
@@ -283,8 +293,14 @@
 
 				if (response.success) {
 					console.log('✓ Producto agregado al carrito exitosamente');
+
 					// Mark as checked
 					confirmBtn.attr('aria-checked', 'true');
+
+					// LOCK the card - disable all controls
+					lockCard(card);
+					console.log('🔒 Tarjeta bloqueada');
+
 					console.log('═══════════════════════════════════════');
 				} else {
 					console.error('❌ Error al agregar al carrito:', response);
@@ -327,12 +343,19 @@
 
 				if (response.success) {
 					console.log('✓ Producto eliminado del carrito exitosamente');
+
 					// Mark as unchecked
 					confirmBtn.attr('aria-checked', 'false');
+
+					// UNLOCK the card - enable all controls
+					unlockCard(card);
+					console.log('🔓 Tarjeta desbloqueada');
+
 					// Reset quantity to 0
 					updateQuantityDisplay(productId, 0);
 					updateTotal(card, productId);
 					updateDateInputState(card, productId);
+
 					console.log('═══════════════════════════════════════');
 				} else {
 					console.error('❌ Error al eliminar del carrito:', response);
@@ -348,6 +371,73 @@
 				console.log('═══════════════════════════════════════');
 			}
 		});
+	}
+
+	/**
+	 * Lock card - disable all controls (buttons and date input)
+	 * Called when checkbox is marked
+	 */
+	function lockCard(card) {
+		// Add locked class
+		card.addClass('locked');
+
+		// Disable +/- buttons
+		card.find('.aura-btn-plus, .aura-btn-minus').prop('disabled', true).addClass('disabled');
+
+		// Disable date input
+		card.find('.aura-equipment-date-range').prop('disabled', true).addClass('disabled');
+
+		// Get flatpickr instance and disable it
+		const dateInput = card.find('.aura-equipment-date-range');
+		const flatpickrInstance = dateInput.data('flatpickr');
+		if (flatpickrInstance) {
+			flatpickrInstance.destroy();
+		}
+	}
+
+	/**
+	 * Unlock card - enable all controls (buttons and date input)
+	 * Called when checkbox is unmarked
+	 */
+	function unlockCard(card) {
+		// Remove locked class
+		card.removeClass('locked');
+
+		// Enable +/- buttons
+		card.find('.aura-btn-plus, .aura-btn-minus').prop('disabled', false).removeClass('disabled');
+
+		// Enable date input and reinitialize flatpickr
+		const dateInput = card.find('.aura-equipment-date-range');
+		dateInput.prop('disabled', false).removeClass('disabled');
+
+		// Reinitialize flatpickr
+		const grid = $('.aura-equipment-wrapper .aura-products-grid');
+		const startDate = grid.attr('data-start-date') || '';
+		const endDate = grid.attr('data-end-date') || '';
+		const hasBooking = startDate && endDate;
+
+		const config = {
+			mode: 'range',
+			dateFormat: 'Y-m-d',
+			altInput: true,
+			altFormat: 'd/m/Y',
+			minDate: 'today',
+			locale: {
+				rangeSeparator: ' to '
+			},
+			onChange: function(selectedDates, dateStr, instance) {
+				const productId = card.attr('data-product-id');
+				handleDateChange(card, selectedDates, dateStr, productId);
+			}
+		};
+
+		if (hasBooking) {
+			config.minDate = startDate;
+			config.maxDate = endDate;
+		}
+
+		const flatpickrInstance = flatpickr(dateInput[0], config);
+		dateInput.data('flatpickr', flatpickrInstance);
 	}
 
 	/**

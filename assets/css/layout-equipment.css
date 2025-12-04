@@ -348,6 +348,27 @@
 }
 
 /* ========================================
+   LOCKED STATE (when checkbox is checked)
+   ======================================== */
+
+.aura-equipment-card.locked {
+	opacity: 0.7;
+}
+
+.aura-equipment-card.locked .aura-btn-plus,
+.aura-equipment-card.locked .aura-btn-minus {
+	opacity: 0.3;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.aura-equipment-card.locked .aura-equipment-date-range {
+	opacity: 0.5;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+/* ========================================
    NOTIFICATION
    ======================================== */
 
