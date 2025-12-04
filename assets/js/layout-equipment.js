@@ -246,10 +246,16 @@
 					}
 				} else {
 					console.error('AJAX falló - response.success es false');
+					console.error('Response completo:', response);
 				}
 			},
-			error: function() {
+			error: function(xhr, status, error) {
 				card.removeClass('loading');
+				console.error('Error AJAX (increase):', {
+					status: status,
+					error: error,
+					response: xhr.responseText
+				});
 			}
 		});
 	}
@@ -290,10 +296,16 @@
 					}
 				} else {
 					console.error('AJAX falló (decrease) - response.success es false');
+					console.error('Response completo:', response);
 				}
 			},
-			error: function() {
+			error: function(xhr, status, error) {
 				card.removeClass('loading');
+				console.error('Error AJAX (decrease):', {
+					status: status,
+					error: error,
+					response: xhr.responseText
+				});
 			}
 		});
 	}

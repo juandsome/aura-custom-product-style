@@ -3,7 +3,7 @@
  * Plugin Name: Aura Custom Product Style
  * Plugin URI: https://collectionaura.com
  * Description: Elementor widgets to display WooCommerce products related to villas in cart with multiple layout options
- * Version: 1.6.6
+ * Version: 1.6.7
  * Author: Collection Aura
  * Author URI: https://collectionaura.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'AURA_CPS_VERSION', '1.6.6' );
+define( 'AURA_CPS_VERSION', '1.6.7' );
 define( 'AURA_CPS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AURA_CPS_URL', plugin_dir_url( __FILE__ ) );
 define( 'AURA_CPS_BASENAME', plugin_basename( __FILE__ ) );
@@ -434,6 +434,9 @@ class Aura_Custom_Product_Style {
 		$rental_start_date = isset( $_POST['rental_start_date'] ) ? sanitize_text_field( $_POST['rental_start_date'] ) : '';
 		$rental_end_date   = isset( $_POST['rental_end_date'] ) ? sanitize_text_field( $_POST['rental_end_date'] ) : '';
 
+		error_log( 'AURA CPS: Increase request for product ID: ' . $product_id );
+		error_log( 'AURA CPS: Dates - Start: "' . $rental_start_date . '" | End: "' . $rental_end_date . '"' );
+
 		// Find existing cart item
 		$cart_item_key = null;
 		$current_quantity = 0;
@@ -448,30 +451,38 @@ class Aura_Custom_Product_Style {
 						 $cart_item['_equipment_rental_end'] === $rental_end_date ) {
 						$cart_item_key = $item_key;
 						$current_quantity = $cart_item['quantity'];
+						error_log( 'AURA CPS: Found existing item WITH matching dates, current quantity: ' . $current_quantity );
 						break;
 					}
 				} else {
 					// No dates provided, find any item for this product
 					$cart_item_key = $item_key;
 					$current_quantity = $cart_item['quantity'];
+					error_log( 'AURA CPS: Found existing item WITHOUT dates requirement, current quantity: ' . $current_quantity );
 					break;
 				}
 			}
 		}
 
 		$new_quantity = $current_quantity + 1;
+		error_log( 'AURA CPS: New quantity after increase: ' . $new_quantity );
 
 		if ( $cart_item_key ) {
 			// Update existing cart item
+			error_log( 'AURA CPS: Updating existing cart item' );
 			WC()->cart->set_quantity( $cart_item_key, $new_quantity );
 		} else {
 			// Add new cart item with rental metadata (if dates provided)
+			error_log( 'AURA CPS: Adding NEW cart item' );
 			$cart_item_data = array();
 			if ( ! empty( $rental_start_date ) && ! empty( $rental_end_date ) ) {
 				$cart_item_data = array(
 					'_equipment_rental_start' => $rental_start_date,
 					'_equipment_rental_end'   => $rental_end_date,
 				);
+				error_log( 'AURA CPS: Adding with dates metadata' );
+			} else {
+				error_log( 'AURA CPS: Adding WITHOUT dates metadata' );
 			}
 
 			WC()->cart->add_to_cart(
@@ -483,6 +494,7 @@ class Aura_Custom_Product_Style {
 			);
 		}
 
+		error_log( 'AURA CPS: Increase successful, returning quantity: ' . $new_quantity );
 		wp_send_json_success( array(
 			'quantity' => $new_quantity,
 			'message'  => esc_html__( 'Equipment added to cart', 'aura-custom-product-style' ),
@@ -498,39 +510,51 @@ class Aura_Custom_Product_Style {
 
 		// Check required parameters
 		if ( ! isset( $_POST['product_id'] ) ) {
+			error_log( 'AURA CPS: Missing product_id in decrease request' );
 			wp_send_json_error( array(
 				'message' => esc_html__( 'Missing product ID', 'aura-custom-product-style' ),
 			) );
 		}
 
 		$product_id = intval( $_POST['product_id'] );
+		error_log( 'AURA CPS: Decrease request for product ID: ' . $product_id );
 
 		// Find cart item (first one found for this product)
+		// Note: We don't require _equipment_rental_start because items can be added without dates
 		$cart_item_key = null;
 		$current_quantity = 0;
 
 		foreach ( WC()->cart->get_cart() as $item_key => $cart_item ) {
-			if ( $cart_item['product_id'] === $product_id && isset( $cart_item['_equipment_rental_start'] ) ) {
+			if ( $cart_item['product_id'] === $product_id ) {
 				$cart_item_key = $item_key;
 				$current_quantity = $cart_item['quantity'];
+				error_log( 'AURA CPS: Found product in cart, current quantity: ' . $current_quantity );
 				break;
 			}
 		}
 
 		if ( ! $cart_item_key ) {
-			wp_send_json_error();
+			error_log( 'AURA CPS: Product ID ' . $product_id . ' not found in cart for decrease' );
+			error_log( 'AURA CPS: Cart contents: ' . print_r( WC()->cart->get_cart(), true ) );
+			wp_send_json_error( array(
+				'message' => 'Product not found in cart',
+			) );
 		}
 
 		$new_quantity = max( 0, $current_quantity - 1 );
+		error_log( 'AURA CPS: New quantity after decrease: ' . $new_quantity );
 
 		if ( $new_quantity === 0 ) {
 			// Remove from cart
+			error_log( 'AURA CPS: Removing item from cart' );
 			WC()->cart->remove_cart_item( $cart_item_key );
 		} else {
 			// Update quantity
+			error_log( 'AURA CPS: Updating quantity to: ' . $new_quantity );
 			WC()->cart->set_quantity( $cart_item_key, $new_quantity );
 		}
 
+		error_log( 'AURA CPS: Decrease successful, returning quantity: ' . $new_quantity );
 		wp_send_json_success( array(
 			'quantity' => $new_quantity,
 		) );
