@@ -233,20 +233,23 @@
 					if (newQuantity === 1 && currentQuantity === 0) {
 						const dateInput = card.find('.aura-equipment-date-range');
 						const flatpickrInstance = dateInput.data('flatpickr');
+
 						if (flatpickrInstance) {
+							// Wait for DOM to fully update, then open calendar
 							setTimeout(function() {
+								// Double-check input is enabled
+								dateInput.prop('disabled', false);
+								dateInput.removeClass('disabled');
+
+								// Open the calendar
 								flatpickrInstance.open();
-							}, 100);
+							}, 300);
 						}
 					}
-				} else {
-					const message = response.data && response.data.message ? response.data.message : 'Error updating cart';
-					showNotification(card, message, 'error');
 				}
 			},
 			error: function() {
 				card.removeClass('loading');
-				showNotification(card, 'Error updating cart', 'error');
 			}
 		});
 	}
@@ -273,14 +276,10 @@
 					updateQuantityDisplay(productId, newQuantity);
 					updateTotal(card, productId);
 					updateDateInputState(card, productId);
-				} else {
-					const message = response.data && response.data.message ? response.data.message : 'Error updating cart';
-					showNotification(card, message, 'error');
 				}
 			},
 			error: function() {
 				card.removeClass('loading');
-				showNotification(card, 'Error updating cart', 'error');
 			}
 		});
 	}

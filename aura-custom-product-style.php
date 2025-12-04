@@ -3,7 +3,7 @@
  * Plugin Name: Aura Custom Product Style
  * Plugin URI: https://collectionaura.com
  * Description: Elementor widgets to display WooCommerce products related to villas in cart with multiple layout options
- * Version: 1.6.2
+ * Version: 1.6.3
  * Author: Collection Aura
  * Author URI: https://collectionaura.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants
-define( 'AURA_CPS_VERSION', '1.6.2' );
+define( 'AURA_CPS_VERSION', '1.6.3' );
 define( 'AURA_CPS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AURA_CPS_URL', plugin_dir_url( __FILE__ ) );
 define( 'AURA_CPS_BASENAME', plugin_basename( __FILE__ ) );
@@ -518,9 +518,7 @@ class Aura_Custom_Product_Style {
 		}
 
 		if ( ! $cart_item_key ) {
-			wp_send_json_error( array(
-				'message' => esc_html__( 'Product not found in cart', 'aura-custom-product-style' ),
-			) );
+			wp_send_json_error();
 		}
 
 		$new_quantity = max( 0, $current_quantity - 1 );
@@ -535,7 +533,6 @@ class Aura_Custom_Product_Style {
 
 		wp_send_json_success( array(
 			'quantity' => $new_quantity,
-			'message'  => $new_quantity === 0 ? esc_html__( 'Removed from cart', 'aura-custom-product-style' ) : esc_html__( 'Quantity updated', 'aura-custom-product-style' ),
 		) );
 	}
 
@@ -568,9 +565,7 @@ class Aura_Custom_Product_Style {
 		}
 
 		if ( ! $cart_item_key ) {
-			wp_send_json_error( array(
-				'message' => esc_html__( 'Product not found in cart', 'aura-custom-product-style' ),
-			) );
+			wp_send_json_error();
 		}
 
 		// Update cart item metadata
@@ -578,9 +573,7 @@ class Aura_Custom_Product_Style {
 		WC()->cart->cart_contents[ $cart_item_key ]['_equipment_rental_end'] = $rental_end_date;
 		WC()->cart->set_session();
 
-		wp_send_json_success( array(
-			'message' => esc_html__( 'Rental dates updated', 'aura-custom-product-style' ),
-		) );
+		wp_send_json_success();
 	}
 }
 
