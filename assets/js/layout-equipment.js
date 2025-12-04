@@ -205,6 +205,9 @@
 	 * Increase quantity and add/update cart
 	 */
 	function increaseQuantity(productId, startDate, endDate, card) {
+		// Get current quantity before AJAX call
+		const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+
 		card.addClass('loading');
 
 		$.ajax({
@@ -225,6 +228,17 @@
 					updateQuantityDisplay(productId, newQuantity);
 					updateTotal(card, productId);
 					updateDateInputState(card, productId);
+
+					// If this was the first item (went from 0 to 1), open date picker
+					if (newQuantity === 1 && currentQuantity === 0) {
+						const dateInput = card.find('.aura-equipment-date-range');
+						const flatpickrInstance = dateInput.data('flatpickr');
+						if (flatpickrInstance) {
+							setTimeout(function() {
+								flatpickrInstance.open();
+							}, 100);
+						}
+					}
 				} else {
 					const message = response.data && response.data.message ? response.data.message : 'Error updating cart';
 					showNotification(card, message, 'error');
