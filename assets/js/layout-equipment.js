@@ -50,17 +50,20 @@
 				return;
 			}
 
-			// Flatpickr configuration with European date format (DD/MM/YYYY)
+			// Flatpickr configuration with European display format
+			// Internal format stays as Y-m-d for compatibility with villa dates
 			const config = {
 				mode: 'range',
-				dateFormat: 'd/m/Y', // Internal format: DD/MM/YYYY
+				dateFormat: 'Y-m-d', // Internal format: YYYY-MM-DD (for compatibility)
 				altInput: true,
-				altFormat: 'd/m/Y', // Display format: DD/MM/YYYY
+				altFormat: 'd/m/Y', // Display format: DD/MM/YYYY (European)
 				minDate: 'today',
 				locale: {
 					rangeSeparator: ' to '
 				},
 				onChange: function(selectedDates, dateStr, instance) {
+					// dateStr will be in Y-m-d format internally
+					// But display shows d/m/Y format to user
 					handleDateChange(card, selectedDates, dateStr, productId);
 				}
 			};
@@ -130,9 +133,12 @@
 	}
 
 	/**
-	 * Handle date range change
+	 * Handle date range change (FRONTEND ONLY - no AJAX)
+	 * Only updates the visual total, does NOT modify cart
 	 */
 	function handleDateChange(card, selectedDates, dateStr, productId) {
+		console.log('Fecha cambiada - Producto ID:', productId);
+
 		if (selectedDates.length !== 2) {
 			return;
 		}
@@ -144,22 +150,17 @@
 		const diffTime = Math.abs(endDate - startDate);
 		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
+		console.log('Días calculados:', diffDays, '| Fechas:', dateStr);
+
 		// Update card data attribute
 		card.attr('data-rental-days', diffDays);
 
-		// Recalculate total
+		// Recalculate total (FRONTEND ONLY)
 		updateTotal(card, productId);
 
-		// Update date input state (keep enabled now that dates are selected)
-		updateDateInputState(card, productId);
+		console.log('Total recalculado (solo visual, NO se actualizó el carrito)');
 
-		// Get current quantity
-		const quantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
-
-		// If quantity > 0, update cart with new dates
-		if (quantity > 0) {
-			updateCartDates(productId, dateStr.split(' to ')[0], dateStr.split(' to ')[1], card);
-		}
+		// NO llamar a updateCartDates - solo el checkbox modifica el carrito
 	}
 
 	/**
@@ -345,28 +346,6 @@
 				console.error('❌ Error AJAX:', { status, error, response: xhr.responseText });
 				showNotification('Error removing from cart', 'error');
 				console.log('═══════════════════════════════════════');
-			}
-		});
-	}
-
-	/**
-	 * Update cart dates (when user changes dates after adding to cart)
-	 */
-	function updateCartDates(productId, startDate, endDate, card) {
-		$.ajax({
-			url: auraCPS.ajaxUrl,
-			type: 'POST',
-			data: {
-				action: 'aura_cps_update_equipment_dates',
-				nonce: auraCPS.nonce,
-				product_id: productId,
-				rental_start_date: startDate,
-				rental_end_date: endDate
-			},
-			success: function(response) {
-				if (response.success) {
-					updateTotal(card, productId);
-				}
 			}
 		});
 	}
