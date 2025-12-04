@@ -94,7 +94,7 @@ $end_date = $booking_dates['end'] ?? '';
 				$start_dt = new DateTime( $rental_start );
 				$end_dt = new DateTime( $rental_end );
 				$diff = $start_dt->diff( $end_dt );
-				$initial_days = max( 1, $diff->days );
+				$initial_days = $diff->days + 1; // Include both start and end dates
 			}
 			$initial_total = $initial_quantity * floatval( $product_price ) * $initial_days;
 		?>
@@ -150,6 +150,9 @@ $end_date = $booking_dates['end'] ?? '';
 							   class="aura-equipment-date-range"
 							   data-product-id="<?php echo esc_attr( $product_id ); ?>"
 							   placeholder="<?php esc_attr_e( 'Select days', 'aura-custom-product-style' ); ?>"
+							   <?php if ( $rental_start && $rental_end ) : ?>
+							   value="<?php echo esc_attr( $rental_start . ' to ' . $rental_end ); ?>"
+							   <?php endif; ?>
 							   readonly />
 					</div>
 					<span class="aura-equipment-unit-price">

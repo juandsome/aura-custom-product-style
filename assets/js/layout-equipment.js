@@ -98,7 +98,17 @@
 	function updateDateInputState(card, productId) {
 		const quantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
 		const dateInput = card.find('.aura-equipment-date-range');
+		const minusBtn = card.find('.aura-btn-minus[data-product-id="' + productId + '"]');
 		const hasCartDates = dateInput.val() && dateInput.val().includes(' to ');
+
+		// Enable/disable minus button based on quantity
+		if (quantity === 0) {
+			minusBtn.prop('disabled', true);
+			minusBtn.addClass('disabled');
+		} else {
+			minusBtn.prop('disabled', false);
+			minusBtn.removeClass('disabled');
+		}
 
 		// Enable date input only when quantity > 0 OR when there are already dates selected
 		if (quantity > 0 || hasCartDates) {
@@ -123,7 +133,7 @@
 
 		// Calculate days (including both start and end date)
 		const diffTime = Math.abs(endDate - startDate);
-		const diffDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
 		// Update card data attribute
 		card.attr('data-rental-days', diffDays);
