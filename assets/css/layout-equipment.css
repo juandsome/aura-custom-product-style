@@ -122,16 +122,26 @@
 }
 
 /* ========================================
-   ROW 2: LABEL ROW
+   ROW 2: DATE SELECTOR (LEFT) + PRICE (RIGHT) WITH UNDERLINE
    ======================================== */
 
-.aura-equipment-label-row {
+.aura-equipment-date-price-row {
 	display: flex;
-	width: 100%;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: 20px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #9A9A9A;
+}
+
+.aura-equipment-date-section {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 }
 
 .aura-equipment-date-label {
-	flex: 1;
 	font-family: 'Open Sans', sans-serif !important;
 	font-weight: 400 !important;
 	font-style: normal !important;
@@ -141,58 +151,28 @@
 	margin: 0 !important;
 }
 
-/* ========================================
-   ROW 3: DATE SELECTOR (LEFT) + PRICE (RIGHT) WITH UNDERLINE
-   ======================================== */
-
-.aura-equipment-date-price-row {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 20px;
-	padding-bottom: 12px;
-	border-bottom: 1px solid #9A9A9A;
-}
-
-.aura-equipment-date-input-wrapper {
-	flex: 0 0 auto;
-	max-width: 250px;
-	position: relative;
-	display: flex;
-	align-items: center;
+.aura-equipment-date-range {
+	width: 100%;
+	max-width: 300px;
+	padding: 8px 12px;
 	border: 1px solid #9A9A9A;
 	border-radius: 3px;
-	background: transparent;
-	transition: background-color 0.2s ease, border-color 0.2s ease;
-	cursor: pointer;
-}
-
-.aura-equipment-date-input-wrapper:hover {
-	background: rgba(0, 0, 0, 0.05);
-	border-color: #666;
-}
-
-.aura-equipment-calendar-icon {
-	position: absolute;
-	left: 12px;
-	width: 20px;
-	height: 20px;
-	pointer-events: none;
-	z-index: 1;
-}
-
-.aura-equipment-date-range {
-	flex: 1;
-	width: 100%;
-	min-width: 200px;
-	padding: 8px 12px 8px 40px;
-	border: none;
 	font-family: 'Open Sans', sans-serif !important;
 	font-size: 0.95em;
 	color: #333;
 	background: transparent;
 	cursor: pointer;
 	outline: none;
+	transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.aura-equipment-date-range:hover {
+	background: rgba(0, 0, 0, 0.05);
+	border-color: #666;
+}
+
+.aura-equipment-date-range:focus {
+	border-color: #333;
 }
 
 .aura-equipment-date-range::placeholder {
@@ -207,6 +187,7 @@
 	line-height: 150% !important;
 	color: #333 !important;
 	text-align: right;
+	white-space: nowrap;
 }
 
 .aura-equipment-unit-price strong {
@@ -311,12 +292,15 @@
 	.aura-equipment-date-price-row {
 		flex-direction: column;
 		align-items: flex-start;
-		gap: 10px;
+		gap: 12px;
 	}
 
-	.aura-equipment-date-input-wrapper {
-		max-width: 100%;
+	.aura-equipment-date-section {
 		width: 100%;
+	}
+
+	.aura-equipment-date-range {
+		max-width: 100%;
 	}
 
 	.aura-equipment-unit-price {
@@ -357,16 +341,9 @@
 		font-size: 0.9em !important;
 	}
 
-	.aura-equipment-calendar-icon {
-		width: 18px;
-		height: 18px;
-		left: 10px;
-	}
-
 	.aura-equipment-date-range {
 		font-size: 0.85em;
-		padding: 6px 10px 6px 36px;
-		min-width: 180px;
+		padding: 6px 10px;
 	}
 
 	.aura-equipment-unit-price {
@@ -473,19 +450,15 @@
 		border-color: #9A9A9A !important;
 	}
 
-	.aura-equipment-date-input-wrapper {
-		background: transparent !important;
-		border-color: #9A9A9A !important;
-	}
-
-	.aura-equipment-date-input-wrapper:hover {
-		background: rgba(0, 0, 0, 0.05) !important;
-	}
-
 	.aura-equipment-date-range {
 		background: transparent !important;
+		border-color: #9A9A9A !important;
 		color: #333 !important;
 		-webkit-text-fill-color: #333 !important;
+	}
+
+	.aura-equipment-date-range:hover {
+		background: rgba(0, 0, 0, 0.05) !important;
 	}
 
 	.aura-equipment-unit-price {

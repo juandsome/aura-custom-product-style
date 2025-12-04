@@ -68,11 +68,6 @@
 			if (hasBooking) {
 				config.minDate = startDate;
 				config.maxDate = endDate;
-
-				// Set default dates if not already set
-				if (!dateInput.val()) {
-					config.defaultDate = [startDate, endDate];
-				}
 			}
 
 			// Initialize Flatpickr
