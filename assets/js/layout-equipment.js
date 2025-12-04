@@ -100,6 +100,8 @@
 		const dateInput = card.find('.aura-equipment-date-range');
 		const minusBtn = card.find('.aura-btn-minus[data-product-id="' + productId + '"]');
 
+		console.log('updateDateInputState llamado - Producto ID: ' + productId + ', Cantidad: ' + quantity);
+
 		// Enable/disable minus button based on quantity
 		if (quantity === 0) {
 			minusBtn.prop('disabled', true);
@@ -111,9 +113,11 @@
 
 		// Enable date input only when quantity > 0
 		if (quantity > 0) {
+			console.log('Habilitando input de fechas (cantidad > 0)');
 			dateInput.prop('disabled', false);
 			dateInput.removeClass('disabled');
 		} else {
+			console.log('Deshabilitando input de fechas (cantidad = 0)');
 			dateInput.prop('disabled', true);
 			dateInput.addClass('disabled');
 		}
@@ -231,19 +235,30 @@
 
 					// If this was the first item (went from 0 to 1), open date picker
 					if (newQuantity === 1 && currentQuantity === 0) {
+						console.log('Agregado 1 producto, producto total: ' + newQuantity);
+						console.log('Activando input de fechas para producto ID: ' + productId);
+
 						const dateInput = card.find('.aura-equipment-date-range');
 						const flatpickrInstance = dateInput.data('flatpickr');
 
 						if (flatpickrInstance) {
+							console.log('Flatpickr instance encontrado, intentando abrir calendario...');
 							// Wait for DOM to fully update, then open calendar
 							setTimeout(function() {
 								// Double-check input is enabled
 								dateInput.prop('disabled', false);
 								dateInput.removeClass('disabled');
 
+								console.log('Input habilitado, estado disabled:', dateInput.prop('disabled'));
+								console.log('Abriendo calendario ahora...');
+
 								// Open the calendar
 								flatpickrInstance.open();
+
+								console.log('Comando .open() ejecutado');
 							}, 300);
+						} else {
+							console.error('No se encontró instancia de Flatpickr para producto ID: ' + productId);
 						}
 					}
 				}
@@ -258,6 +273,9 @@
 	 * Decrease quantity or remove from cart
 	 */
 	function decreaseQuantity(productId, card) {
+		// Get current quantity before AJAX call to detect 1->0 transition
+		const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+
 		card.addClass('loading');
 
 		$.ajax({
@@ -276,6 +294,13 @@
 					updateQuantityDisplay(productId, newQuantity);
 					updateTotal(card, productId);
 					updateDateInputState(card, productId);
+
+					// If quantity went from 1 to 0, log deactivation
+					if (newQuantity === 0 && currentQuantity === 1) {
+						console.log('Producto reducido a 0, desactivando calendario para producto ID: ' + productId);
+						const dateInput = card.find('.aura-equipment-date-range');
+						console.log('Input deshabilitado, estado disabled:', dateInput.prop('disabled'));
+					}
 				}
 			},
 			error: function() {
