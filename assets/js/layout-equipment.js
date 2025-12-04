@@ -100,27 +100,33 @@
 		const dateInput = card.find('.aura-equipment-date-range');
 		const minusBtn = card.find('.aura-btn-minus[data-product-id="' + productId + '"]');
 
-		console.log('updateDateInputState llamado - Producto ID: ' + productId + ', Cantidad: ' + quantity);
+		console.log('───────────────────────────────────────');
+		console.log('updateDateInputState - Producto ID:', productId, '| Cantidad:', quantity);
 
 		// Enable/disable minus button based on quantity
 		if (quantity === 0) {
 			minusBtn.prop('disabled', true);
 			minusBtn.addClass('disabled');
+			console.log('  → Botón (-) DESHABILITADO');
 		} else {
 			minusBtn.prop('disabled', false);
 			minusBtn.removeClass('disabled');
+			console.log('  → Botón (-) HABILITADO');
 		}
 
 		// Enable date input only when quantity > 0
 		if (quantity > 0) {
-			console.log('Habilitando input de fechas (cantidad > 0)');
 			dateInput.prop('disabled', false);
 			dateInput.removeClass('disabled');
+			console.log('  → Input de fechas HABILITADO (cantidad > 0)');
+			console.log('  → Estado actual disabled:', dateInput.prop('disabled'));
 		} else {
-			console.log('Deshabilitando input de fechas (cantidad = 0)');
 			dateInput.prop('disabled', true);
 			dateInput.addClass('disabled');
+			console.log('  → Input de fechas DESHABILITADO (cantidad = 0)');
+			console.log('  → Estado actual disabled:', dateInput.prop('disabled'));
 		}
+		console.log('───────────────────────────────────────');
 	}
 
 	/**
@@ -162,6 +168,8 @@
 	function initQuantityControls() {
 		// Plus button
 		$(document).on('click', '.aura-equipment-card .aura-btn-plus', function() {
+			console.log('Click en botón + detectado');
+
 			const btn = $(this);
 			const card = btn.closest('.aura-equipment-card');
 			const productId = btn.attr('data-product-id');
@@ -169,19 +177,7 @@
 			const dateStr = dateInput.val();
 			const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
 
-			// If quantity > 0, check if dates are selected
-			if (currentQuantity > 0) {
-				if (!dateStr || !dateStr.includes(' to ')) {
-					// Open the date picker to help user
-					const flatpickrInstance = dateInput.data('flatpickr');
-					if (flatpickrInstance) {
-						setTimeout(function() {
-							flatpickrInstance.open();
-						}, 100);
-					}
-					return;
-				}
-			}
+			console.log('Producto ID:', productId, '| Cantidad actual:', currentQuantity);
 
 			// Get dates if they exist, otherwise use empty strings (will be set later)
 			let startDate = '';
@@ -190,6 +186,9 @@
 				const dates = dateStr.split(' to ');
 				startDate = dates[0].trim();
 				endDate = dates[1].trim();
+				console.log('Fechas encontradas - Inicio:', startDate, '| Fin:', endDate);
+			} else {
+				console.log('No hay fechas seleccionadas');
 			}
 
 			increaseQuantity(productId, startDate, endDate, card);
@@ -197,9 +196,14 @@
 
 		// Minus button
 		$(document).on('click', '.aura-equipment-card .aura-btn-minus', function() {
+			console.log('Click en botón - detectado');
+
 			const btn = $(this);
 			const card = btn.closest('.aura-equipment-card');
 			const productId = btn.attr('data-product-id');
+			const currentQuantity = parseInt(card.find('.aura-quantity-display[data-product-id="' + productId + '"]').text()) || 0;
+
+			console.log('Producto ID:', productId, '| Cantidad actual antes de disminuir:', currentQuantity);
 
 			decreaseQuantity(productId, card);
 		});
@@ -229,38 +233,19 @@
 
 				if (response.success) {
 					const newQuantity = response.data.quantity;
+					console.log('AJAX exitoso - Nueva cantidad:', newQuantity, '| Cantidad anterior:', currentQuantity);
+
 					updateQuantityDisplay(productId, newQuantity);
 					updateTotal(card, productId);
 					updateDateInputState(card, productId);
 
-					// If this was the first item (went from 0 to 1), open date picker
+					// Log when going from 0 to 1
 					if (newQuantity === 1 && currentQuantity === 0) {
-						console.log('Agregado 1 producto, producto total: ' + newQuantity);
-						console.log('Activando input de fechas para producto ID: ' + productId);
-
-						const dateInput = card.find('.aura-equipment-date-range');
-						const flatpickrInstance = dateInput.data('flatpickr');
-
-						if (flatpickrInstance) {
-							console.log('Flatpickr instance encontrado, intentando abrir calendario...');
-							// Wait for DOM to fully update, then open calendar
-							setTimeout(function() {
-								// Double-check input is enabled
-								dateInput.prop('disabled', false);
-								dateInput.removeClass('disabled');
-
-								console.log('Input habilitado, estado disabled:', dateInput.prop('disabled'));
-								console.log('Abriendo calendario ahora...');
-
-								// Open the calendar
-								flatpickrInstance.open();
-
-								console.log('Comando .open() ejecutado');
-							}, 300);
-						} else {
-							console.error('No se encontró instancia de Flatpickr para producto ID: ' + productId);
-						}
+						console.log('✓ Agregado 1 producto, producto total:', newQuantity);
+						console.log('✓ El input de fechas debería estar activado ahora');
 					}
+				} else {
+					console.error('AJAX falló - response.success es false');
 				}
 			},
 			error: function() {
@@ -291,16 +276,20 @@
 
 				if (response.success) {
 					const newQuantity = response.data.quantity;
+					console.log('AJAX exitoso (decrease) - Nueva cantidad:', newQuantity, '| Cantidad anterior:', currentQuantity);
+
 					updateQuantityDisplay(productId, newQuantity);
 					updateTotal(card, productId);
 					updateDateInputState(card, productId);
 
-					// If quantity went from 1 to 0, log deactivation
+					// Log when going from 1 to 0
 					if (newQuantity === 0 && currentQuantity === 1) {
-						console.log('Producto reducido a 0, desactivando calendario para producto ID: ' + productId);
+						console.log('✓ Producto reducido a 0, desactivando calendario para producto ID:', productId);
 						const dateInput = card.find('.aura-equipment-date-range');
-						console.log('Input deshabilitado, estado disabled:', dateInput.prop('disabled'));
+						console.log('✓ Input deshabilitado, estado disabled:', dateInput.prop('disabled'));
 					}
+				} else {
+					console.error('AJAX falló (decrease) - response.success es false');
 				}
 			},
 			error: function() {
