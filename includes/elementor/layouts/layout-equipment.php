@@ -140,11 +140,15 @@ $end_date = $booking_dates['end'] ?? '';
 					</div>
 				</div>
 
-				<!-- Row 2: Date Range Selector (replaces description) -->
-				<div class="aura-equipment-date-row">
+				<!-- Row 2: Label -->
+				<div class="aura-equipment-label-row">
 					<label class="aura-equipment-date-label">
 						<?php esc_html_e( 'For how many days?', 'aura-custom-product-style' ); ?>
 					</label>
+				</div>
+
+				<!-- Row 3: Date Selector (left) + Price per day (right) -->
+				<div class="aura-equipment-date-price-row">
 					<div class="aura-equipment-date-input-wrapper">
 						<img src="https://collectionaura.com/wp-content/uploads/2025/12/calendar.svg"
 							 alt="Calendar"
@@ -156,11 +160,7 @@ $end_date = $booking_dates['end'] ?? '';
 							   value="<?php echo esc_attr( $rental_start && $rental_end ? $rental_start . ' to ' . $rental_end : '' ); ?>"
 							   readonly />
 					</div>
-				</div>
-
-				<!-- Row 3: Price per day -->
-				<div class="aura-product-price-row">
-					<span class="aura-price">
+					<span class="aura-equipment-unit-price">
 						<strong><?php echo esc_html( $product_price ); ?> <?php echo esc_html( get_woocommerce_currency_symbol() ); ?></strong>
 						<?php esc_html_e( 'per day', 'aura-custom-product-style' ); ?>
 					</span>
