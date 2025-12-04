@@ -87,7 +87,8 @@ class Products_Widget extends Widget_Base {
 			'aura-cps-layout-checkbox',
 			'aura-cps-layout-wine',
 			'aura-cps-layout-kids',
-			'aura-cps-layout-moments'
+			'aura-cps-layout-moments',
+			'aura-cps-layout-equipment'
 		);
 	}
 
@@ -113,11 +114,12 @@ class Products_Widget extends Widget_Base {
 				'type'    => Controls_Manager::SELECT,
 				'default' => 'card',
 				'options' => array(
-					'card'     => esc_html__( 'Card Layout', 'aura-custom-product-style' ),
-					'checkbox' => esc_html__( 'Checkbox Layout', 'aura-custom-product-style' ),
-					'wine'     => esc_html__( 'Wine Layout', 'aura-custom-product-style' ),
-					'kids'     => esc_html__( 'Kids Corner Layout', 'aura-custom-product-style' ),
-					'moments'  => esc_html__( 'Moments Layout', 'aura-custom-product-style' ),
+					'card'      => esc_html__( 'Card Layout', 'aura-custom-product-style' ),
+					'checkbox'  => esc_html__( 'Checkbox Layout', 'aura-custom-product-style' ),
+					'wine'      => esc_html__( 'Wine Layout', 'aura-custom-product-style' ),
+					'kids'      => esc_html__( 'Kids Corner Layout', 'aura-custom-product-style' ),
+					'moments'   => esc_html__( 'Moments Layout', 'aura-custom-product-style' ),
+					'equipment' => esc_html__( 'Equipment Rental Layout', 'aura-custom-product-style' ),
 				),
 			)
 		);

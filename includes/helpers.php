@@ -250,3 +250,40 @@ function aura_cps_get_product_image_url( $product, $size = 'medium' ) {
 
 	return $image_url ? $image_url : wc_placeholder_img_src( $size );
 }
+
+/**
+ * Get all cart quantities with rental dates (for equipment layout)
+ *
+ * Returns an array with product IDs as keys and arrays containing:
+ * - quantity: total quantity in cart
+ * - rental_start: rental start date
+ * - rental_end: rental end date
+ *
+ * @return array Associative array of product data
+ */
+function aura_cps_get_all_cart_quantities_with_dates() {
+	$cart_data = array();
+
+	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+		return $cart_data;
+	}
+
+	foreach ( WC()->cart->get_cart() as $cart_item ) {
+		$product_id = $cart_item['product_id'];
+
+		// Only process equipment items (those with rental dates)
+		if ( isset( $cart_item['_equipment_rental_start'] ) && isset( $cart_item['_equipment_rental_end'] ) ) {
+			if ( ! isset( $cart_data[ $product_id ] ) ) {
+				$cart_data[ $product_id ] = array(
+					'quantity'     => 0,
+					'rental_start' => $cart_item['_equipment_rental_start'],
+					'rental_end'   => $cart_item['_equipment_rental_end'],
+				);
+			}
+
+			$cart_data[ $product_id ]['quantity'] += $cart_item['quantity'];
+		}
+	}
+
+	return $cart_data;
+}

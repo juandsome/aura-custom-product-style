@@ -374,7 +374,7 @@
 
 @media (prefers-color-scheme: dark) {
 	.aura-moments-card {
-		background: #fff !important;
+		background: transparent !important;
 		border-color: #9A9A9A !important;
 		color: #333 !important;
 	}
