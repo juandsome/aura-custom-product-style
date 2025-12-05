@@ -493,6 +493,33 @@
 }
 
 /* ========================================
+   SHOW MORE/LESS FUNCTIONALITY
+   ======================================== */
+
+/* Hidden items (for show more functionality) */
+.aura-equipment-card.hidden-item {
+	display: none !important;
+	opacity: 0;
+}
+
+/* Show hidden items when grid is expanded */
+.aura-products-grid.expanded .aura-equipment-card.hidden-item {
+	display: flex !important;
+	animation: fadeInEquipmentItems 0.5s ease forwards;
+}
+
+@keyframes fadeInEquipmentItems {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* ========================================
    ELEMENTOR PREVIEW FIXES
    ======================================== */
 
