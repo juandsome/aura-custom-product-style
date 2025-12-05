@@ -457,10 +457,9 @@
 
 		const total = quantity * price * days;
 
-		// Update total display
+		// Update total display with Euro symbol
 		const totalElement = card.find('.aura-total-price[data-product-id="' + productId + '"]');
-		const currencySymbol = totalElement.text().match(/[^\d.,\s]+$/)?.[0] || '';
-		totalElement.html(total.toFixed(2) + ' ' + currencySymbol);
+		totalElement.html(total.toFixed(2) + ' €');
 	}
 
 	/**
