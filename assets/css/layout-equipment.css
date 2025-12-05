@@ -272,7 +272,7 @@
 	cursor: pointer;
 	transition: all 0.2s ease;
 	outline: none !important;
-	padding: 0;
+	padding: 0px 10px !important;
 	margin: 0;
 	box-shadow: none !important;
 }
