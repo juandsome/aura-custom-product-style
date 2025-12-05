@@ -504,7 +504,7 @@
 
 /* Show hidden items when grid is expanded */
 .aura-products-grid.expanded .aura-equipment-card.hidden-item {
-	display: flex !important;
+	display: block !important;
 	animation: fadeInEquipmentItems 0.5s ease forwards;
 }
 
@@ -528,7 +528,7 @@
 }
 
 .elementor-editor-active .aura-equipment-card.hidden-item {
-	display: flex;
+	display: block;
 	opacity: 0.3;
 }
 
